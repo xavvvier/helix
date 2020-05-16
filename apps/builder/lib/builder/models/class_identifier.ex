@@ -9,5 +9,4 @@ defmodule Helix.Builder.ClassIdentifier do
     Type to represent the `ClassIdentifier` struct with id as an integer
   """
   @type t :: %__MODULE__{id: pos_integer()}
-
 end

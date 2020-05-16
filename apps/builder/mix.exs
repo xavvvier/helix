@@ -10,7 +10,7 @@ defmodule Helix.Builder.MixProject do
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
       elixir: "~> 1.10",
-      elixirc_paths: elixirc_paths(Mix.env),
+      elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -24,7 +24,6 @@ defmodule Helix.Builder.MixProject do
     ]
   end
 
-
   # Specifies which path to compile per environment
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
@@ -34,7 +33,7 @@ defmodule Helix.Builder.MixProject do
     [
       {:ecto_sql, "~> 3.0"},
       {:postgrex, "~> 0.15.4"},
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]
   end
 end

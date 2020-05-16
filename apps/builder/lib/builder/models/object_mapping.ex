@@ -4,10 +4,10 @@ defmodule Helix.Builder.ObjectMapping do
 
   @schema_prefix "sys"
   schema "object_mapping" do
-    field :schema, :string
-    field :class, :integer
-    field :table, :string
-    field :column, :string
+    field(:schema, :string)
+    field(:class, :integer)
+    field(:table, :string)
+    field(:column, :string)
   end
 
   def changeset(mapping, params \\ %{}) do

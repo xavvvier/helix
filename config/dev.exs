@@ -6,4 +6,3 @@ config :builder, Helix.Builder.Repo,
   username: "xavvvier",
   password: "",
   hostname: "localhost"
-

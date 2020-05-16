@@ -116,4 +116,69 @@ defmodule Helix.Test.PropertyTest do
 
     assert changeset.valid?
   end
+
+  defp build_prop(type, length, precision, scale, nullable) do
+    %Property{type: type, length: length, precision: precision, scale: scale, nullable: nullable}
+    |> Property.to_ecto_type()
+  end
+
+  test "to_ecto_type from atoms" do
+    result =
+      ~w(number big_number date time datetime big_text yes_no file single_link single_select)a
+      |> Enum.map(&build_prop(&1, nil, nil, nil, nil))
+      |> Enum.map(&elem(&1, 0))
+
+    assert result == ~w[integer bigint date time timestamp text boolean binary integer integer]a
+    assert build_prop(:text, 10, nil, nil, nil) == {:string, size: 10, null: nil}
+    assert build_prop(:text, 10, 0, nil, nil) == {:string, size: 10, null: nil}
+
+    assert build_prop(:decimal, nil, 7, 3, nil) ==
+             {:numeric, precision: 7, scale: 3, null: nil}
+  end
+
+  test "to_ecto_type text without length should fail" do
+    assert_raise ArgumentError, "invalid text length", fn ->
+      build_prop(:text, 0, nil, nil, nil)
+    end
+
+    assert_raise ArgumentError, "invalid text length", fn ->
+      build_prop(:text, -1, nil, nil, nil)
+    end
+
+    assert_raise ArgumentError, "invalid text length", fn ->
+      build_prop(:text, "nope", nil, nil, nil)
+    end
+  end
+
+  test "to_ecto_type decimal without precision or scale should fail" do
+    assert_raise ArgumentError, "invalid decimal precision/scale", fn ->
+      build_prop(:decimal, nil, 0, 2, nil)
+    end
+
+    assert_raise ArgumentError, "invalid decimal precision/scale", fn ->
+      build_prop(:decimal, nil, -1, 2, nil)
+    end
+
+    assert_raise ArgumentError, "invalid decimal precision/scale", fn ->
+      build_prop(:decimal, nil, "nope", 2, nil)
+    end
+
+    assert_raise ArgumentError, "invalid decimal precision/scale", fn ->
+      build_prop(:decimal, nil, 5, 0, nil)
+    end
+
+    assert_raise ArgumentError, "invalid decimal precision/scale", fn ->
+      build_prop(:decimal, nil, 5, -1, nil)
+    end
+
+    assert_raise ArgumentError, "invalid decimal precision/scale", fn ->
+      build_prop(:decimal, nil, 5, "nope", nil)
+    end
+  end
+
+  test "to_ecto_type raise error when argument is not atom" do
+    assert_raise RuntimeError, fn ->
+      build_prop("not_atom", nil, nil, nil, nil)
+    end
+  end
 end

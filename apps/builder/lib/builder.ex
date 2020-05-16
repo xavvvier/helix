@@ -18,7 +18,7 @@ defmodule Helix.Builder do
   Creates a `Class` and the given properties.
   Every `Class` creates an id `Property` by default.
   """
-  @spec create_class(Class.t) :: {:ok, map()} | {:error, atom(), tuple()}
+  @spec create_class(Class.t()) :: {:ok, map()} | {:error, atom(), tuple()}
   def create_class(%Class{} = class) do
     GenServer.call(@server, {:create_class, class})
   end
@@ -26,7 +26,8 @@ defmodule Helix.Builder do
   @doc """
   Add `Property` elements to an existent class, use the `ClassIdentifier` to locate the `Class`
   """
-  @spec create_properties(ClassIdentifier.t, [Property.t]) :: {:ok, map()} | {:error, atom(), any()}
+  @spec create_properties(ClassIdentifier.t(), [Property.t()]) ::
+          {:ok, map()} | {:error, atom(), any()}
   def create_properties(%ClassIdentifier{} = class, properties) do
     GenServer.call(@server, {:create_properties, class, properties})
   end
@@ -61,7 +62,6 @@ defmodule Helix.Builder do
 
   ## GenServer implementation
 
-
   def init(state) do
     {:ok, state}
   end
@@ -73,5 +73,4 @@ defmodule Helix.Builder do
   def handle_call({:create_properties, class, properties}, _from, state) do
     {:reply, Impl.create_properties(class, properties), state}
   end
-
 end

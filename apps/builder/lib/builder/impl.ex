@@ -71,7 +71,6 @@ defmodule Helix.Builder.Impl do
   """
   @spec create_class(Class.t()) :: {:ok, map()} | {:error, atom(), tuple()}
   def create_class(%Class{} = class) do
-
     Multi.new()
     |> Multi.insert(:new_class, Class.changeset(class))
     |> Multi.run(:sql_table, fn _repo, changes -> create_sql_table(changes) end)
@@ -123,6 +122,7 @@ defmodule Helix.Builder.Impl do
     meta = Ecto.Adapter.lookup_meta(Repo)
 
     try do
+      # See ecto_sql/lib/ecto/adapters/postgres/connection.ex execute_ddl/1
       Repo.__adapter__().execute_ddl(meta, ddl, opts)
     rescue
       e -> {:error, e}

@@ -6,5 +6,3 @@ config :builder, Helix.Builder.Repo,
   password: "",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
-
-

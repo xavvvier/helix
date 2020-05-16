@@ -9,9 +9,9 @@ defmodule Helix.Builder.Class do
 
   @schema_prefix "sys"
   schema "class" do
-    field :name, :string
-    field :is_system, :boolean, default: :false
-    has_many :properties, Helix.Builder.Property
+    field(:name, :string)
+    field(:is_system, :boolean, default: false)
+    has_many(:properties, Helix.Builder.Property)
   end
 
   def changeset(class, params \\ %{}) do

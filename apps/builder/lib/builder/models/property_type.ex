@@ -13,6 +13,7 @@ defmodule Helix.Builder.PropertyType do
 
   def equal?(type1, type2), do: type1 == type2
 
+  # Defines how the property type is going to be stored in the database
   @mapping %{
     number: 1,
     big_number: 2,
@@ -49,7 +50,8 @@ defmodule Helix.Builder.PropertyType do
   def to_integer(atom) when is_atom(atom) do
     @mapping[atom]
   end
-  def to_integer(non_atom), do: raise "an atom is expected, got #{inspect(non_atom)}"
+
+  def to_integer(non_atom), do: raise("an atom is expected, got #{inspect(non_atom)}")
 
   @doc """
   Parses the integer representation of a data type to is atom representation
@@ -65,6 +67,6 @@ defmodule Helix.Builder.PropertyType do
       nil -> raise "undefined type"
     end
   end
-  def to_atom(_), do: raise "an integer is expected"
 
+  def to_atom(_), do: raise("an integer is expected")
 end
