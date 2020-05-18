@@ -119,10 +119,10 @@ defmodule Helix.Test.PropertyTest do
 
   defp build_prop(type, length, precision, scale, nullable) do
     %Property{type: type, length: length, precision: precision, scale: scale, nullable: nullable}
-    |> Property.to_ecto_type()
+    |> Property.ecto_type()
   end
 
-  test "to_ecto_type from atoms" do
+  test "ecto_type from atoms" do
     result =
       ~w(number big_number date time datetime big_text yes_no file single_link single_select)a
       |> Enum.map(&build_prop(&1, nil, nil, nil, nil))
@@ -136,7 +136,7 @@ defmodule Helix.Test.PropertyTest do
              {:numeric, precision: 7, scale: 3, null: nil}
   end
 
-  test "to_ecto_type text without length should fail" do
+  test "ecto_type text without length should fail" do
     assert_raise ArgumentError, "invalid text length", fn ->
       build_prop(:text, 0, nil, nil, nil)
     end
@@ -150,7 +150,7 @@ defmodule Helix.Test.PropertyTest do
     end
   end
 
-  test "to_ecto_type decimal without precision or scale should fail" do
+  test "ecto_type decimal without precision or scale should fail" do
     assert_raise ArgumentError, "invalid decimal precision/scale", fn ->
       build_prop(:decimal, nil, 0, 2, nil)
     end
@@ -176,7 +176,7 @@ defmodule Helix.Test.PropertyTest do
     end
   end
 
-  test "to_ecto_type raise error when argument is not atom" do
+  test "ecto_type raise error when argument is not atom" do
     assert_raise RuntimeError, fn ->
       build_prop("not_atom", nil, nil, nil, nil)
     end

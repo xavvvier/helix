@@ -111,24 +111,24 @@ defmodule Helix.Builder.Property do
   Parses the atom representation of a data type to its ecto type representation
 
   ##Examples
-  iex> Helix.Builder.Property.to_ecto_type(%Property{type: :text, length: 200, nullable: false})
+  iex> Helix.Builder.Property.ecto_type(%Property{type: :text, length: 200, nullable: false})
   {:string, [size: 200, null: false]}
 
-  iex> Helix.Builder.Property.to_ecto_type(%Property{type: :decimal, precision: 8, scale: 2})
+  iex> Helix.Builder.Property.ecto_type(%Property{type: :decimal, precision: 8, scale: 2})
   {:numeric, [precision: 8, scale: 2, null: nil]}
 
-  iex> Helix.Builder.Property.to_ecto_type(%Property{type: :number})
+  iex> Helix.Builder.Property.ecto_type(%Property{type: :number})
   {:integer, [null: nil]}
 
   """
-  def to_ecto_type(%Property{type: :text, length: length, nullable: nullable})
+  def ecto_type(%Property{type: :text, length: length, nullable: nullable})
       when is_integer(length) and length > 0 do
     {:string, [size: length, null: nullable]}
   end
 
-  def to_ecto_type(%Property{type: :text}), do: raise(ArgumentError, "invalid text length")
+  def ecto_type(%Property{type: :text}), do: raise(ArgumentError, "invalid text length")
 
-  def to_ecto_type(%Property{
+  def ecto_type(%Property{
         type: :decimal,
         precision: precision,
         scale: scale,
@@ -138,13 +138,13 @@ defmodule Helix.Builder.Property do
     {:numeric, [precision: precision, scale: scale, null: nullable]}
   end
 
-  def to_ecto_type(%Property{type: :decimal}),
+  def ecto_type(%Property{type: :decimal}),
     do: raise(ArgumentError, "invalid decimal precision/scale")
 
-  def to_ecto_type(%Property{type: type, nullable: nullable}) when is_atom(type) do
+  def ecto_type(%Property{type: type, nullable: nullable}) when is_atom(type) do
     {@ecto_mapping[type], [null: nullable]}
   end
 
-  def to_ecto_type(%Property{type: other}),
+  def ecto_type(%Property{type: other}),
     do: raise("an atom is expected, got #{inspect(other)}")
 end

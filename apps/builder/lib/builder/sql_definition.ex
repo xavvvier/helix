@@ -37,7 +37,7 @@ defmodule Helix.Builder.SqlDefinition do
 
   # Defines the ddl statement to create a new property.
   defp ddl_new_property(prop) do
-    ecto_type = Property.to_ecto_type(prop)
+    ecto_type = Property.ecto_type(prop)
     {:add, prop.name, ecto_type, []}
   end
 
@@ -58,7 +58,7 @@ defmodule Helix.Builder.SqlDefinition do
   Defines the ddl statement to create a column for the given property
   """
   def ddl_for_property(%Property{} = property, schema_table, column_name, related_schema) do
-    ecto_type = Property.to_ecto_type(property)
+    ecto_type = Property.ecto_type(property)
     ddl_for_column(property.type, schema_table, related_schema, column_name, ecto_type)
   end
 
