@@ -13,7 +13,8 @@ defmodule Helix.Builder.SqlDefinition do
     # Define the mandatory primary key column
     pk_column = {:add, :id, :serial, primary_key: true}
 
-    # Determine the table :create operations for complex columns (:file, :multiple_file, :multiple_link, :multiple_select)
+    # Determines the table :create operations for complex columns,
+    # such as :multiple_file, :multiple_link, :multiple_option
     extra_table_for_complex_properties = []
 
     [
@@ -37,8 +38,8 @@ defmodule Helix.Builder.SqlDefinition do
 
   # Defines the ddl statement to create a new property.
   defp ddl_new_property(prop) do
-    ecto_type = Property.ecto_type(prop)
-    {:add, prop.name, ecto_type, []}
+    {ecto_type, opts} = Property.ecto_type(prop)
+    {:add, prop.name, ecto_type, opts}
   end
 
   @doc """
@@ -104,7 +105,7 @@ defmodule Helix.Builder.SqlDefinition do
          column_name,
          {_, opts}
        )
-       when property_type in [:single_link, :single_select] do
+       when property_type in [:single_link, :single_option] do
     {
       {
         :alter,
@@ -127,7 +128,7 @@ defmodule Helix.Builder.SqlDefinition do
          column_name,
          _
        )
-       when property_type in [:multiple_link, :multiple_select] do
+       when property_type in [:multiple_link, :multiple_option] do
     {
       {
         :create,

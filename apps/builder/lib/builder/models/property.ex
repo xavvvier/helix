@@ -104,7 +104,7 @@ defmodule Helix.Builder.Property do
     file: :binary,
     yes_no: :boolean,
     single_link: :integer,
-    single_select: :integer
+    single_option: :integer
   }
 
   @doc """
@@ -118,7 +118,7 @@ defmodule Helix.Builder.Property do
   {:numeric, [precision: 8, scale: 2, null: nil]}
 
   iex> Helix.Builder.Property.ecto_type(%Property{type: :number})
-  {:integer, [null: nil]}
+  {:integer, []}
 
   """
   def ecto_type(%Property{type: :text, length: length, nullable: nullable})
@@ -141,6 +141,9 @@ defmodule Helix.Builder.Property do
   def ecto_type(%Property{type: :decimal}),
     do: raise(ArgumentError, "invalid decimal precision/scale")
 
+  def ecto_type(%Property{type: type, nullable: nil}) when is_atom(type) do
+    {@ecto_mapping[type], []}
+  end
   def ecto_type(%Property{type: type, nullable: nullable}) when is_atom(type) do
     {@ecto_mapping[type], [null: nullable]}
   end

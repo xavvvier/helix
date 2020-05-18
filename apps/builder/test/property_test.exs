@@ -124,7 +124,7 @@ defmodule Helix.Test.PropertyTest do
 
   test "ecto_type from atoms" do
     result =
-      ~w(number big_number date time datetime big_text yes_no file single_link single_select)a
+      ~w(number big_number date time datetime big_text yes_no file single_link single_option)a
       |> Enum.map(&build_prop(&1, nil, nil, nil, nil))
       |> Enum.map(&elem(&1, 0))
 

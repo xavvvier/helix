@@ -28,8 +28,8 @@ defmodule Helix.Builder.PropertyType do
     multiple_file: 11,
     single_link: 12,
     multiple_link: 13,
-    single_select: 14,
-    multiple_select: 15
+    single_option: 14,
+    multiple_option: 15
   }
 
   @doc """

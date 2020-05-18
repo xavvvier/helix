@@ -171,7 +171,7 @@ defmodule Helix.Builder.Impl do
           related_table = sql_table_for_class(property.link_class_id)
           SqlDefinition.ddl_for_property(property, schema_table, column_name, related_table)
 
-        property.type in [:single_select, :multiple_select] ->
+        property.type in [:single_option, :multiple_option] ->
           SqlDefinition.ddl_for_property(
             property,
             schema_table,

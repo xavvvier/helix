@@ -17,19 +17,20 @@ defmodule Helix.Test.BuilderTest do
     assert result_class.id > 0
   end
 
-  test "create class with properties" do
+  test "create class with simple properties" do
     class = %Class{
       name: "Class2",
       properties: [
         %Property{name: "p1", type: :number},
-        %Property{name: "p2", type: :text, length: 250}
+        %Property{name: "p2", type: :text, length: 250},
+        %Property{name: "p3\"--", type: :single_option},
       ]
     }
 
     {:ok, %{new_class: result_class}} = Builder.create_class(class)
     assert result_class.id > 0
     properties = SqlHelpers.class_properties(result_class.id)
-    assert properties == [{"p1", :number}, {"p2", :text}]
+    assert properties == [{"p1", :number}, {"p2", :text}, {"p3\"--", :single_option}]
   end
 
   test "creating a class creates a table" do
@@ -216,8 +217,8 @@ defmodule Helix.Test.BuilderTest do
           %Property{name: "p%1", type: :number},
           %Property{name: "photo files", type: :multiple_file},
           %Property{name: "p4^", type: :text, length: 250},
-          %Property{name: "one select", type: :single_select},
-          %Property{name: "multiple select", type: :multiple_select},
+          %Property{name: "one option", type: :single_option},
+          %Property{name: "multiple option", type: :multiple_option},
           %Property{name: "single item", type: :single_link, link_class_id: tag_class.id},
           %Property{name: "multiple items", type: :multiple_link, link_class_id: tag_class.id}
         ]
@@ -226,7 +227,7 @@ defmodule Helix.Test.BuilderTest do
     mappings = SqlHelpers.property_mappings("sys", "test_class")
 
     assert mappings == [
-             {"one select", "sys", "test_class", "one_select"},
+             {"one option", "sys", "test_class", "one_option"},
              {"p4^", "sys", "test_class", "p4_"},
              {"p%1", "sys", "test_class", "p_1"},
              {"single item", "sys", "test_class", "single_item"}
@@ -236,10 +237,10 @@ defmodule Helix.Test.BuilderTest do
     assert multiple_file_mapping == [{"photo files", "sys", "test_class_photo_files", nil}]
     multiple_link_mapping = SqlHelpers.property_mappings("sys", "test_class_multiple_items")
     assert multiple_link_mapping == [{"multiple items", "sys", "test_class_multiple_items", nil}]
-    multiple_select_mapping = SqlHelpers.property_mappings("sys", "test_class_multiple_select")
+    multiple_option_mapping = SqlHelpers.property_mappings("sys", "test_class_multiple_option")
 
-    assert multiple_select_mapping == [
-             {"multiple select", "sys", "test_class_multiple_select", nil}
+    assert multiple_option_mapping == [
+             {"multiple option", "sys", "test_class_multiple_option", nil}
            ]
   end
 
@@ -278,8 +279,8 @@ defmodule Helix.Test.BuilderTest do
       %Property{name: "i", type: :yes_no},
       %Property{name: "j", type: :file},
       %Property{name: "k", type: :single_link, link_class_id: 1},
-      %Property{name: "u", type: :single_select},
-      %Property{name: "y", type: :multiple_select}
+      %Property{name: "u", type: :single_option},
+      %Property{name: "y", type: :multiple_option}
     ]
 
     {:ok, _} = Builder.create_class(%Class{name: "test", properties: props})
@@ -319,7 +320,7 @@ defmodule Helix.Test.BuilderTest do
       %Property{name: "i", type: :yes_no},
       %Property{name: "j 5", type: :file},
       %Property{name: "k", type: :single_link, link_class_id: 1},
-      %Property{name: "u", type: :single_select}
+      %Property{name: "u", type: :single_option}
     ]
 
     {:ok, _} = Builder.create_properties(%ClassIdentifier{id: test_class.id}, props)
@@ -347,7 +348,7 @@ defmodule Helix.Test.BuilderTest do
   test "test constraint creation in create_class" do
     props = [
       %Property{name: "parent class", type: :single_link, link_class_id: 1},
-      %Property{name: "status type", type: :single_select}
+      %Property{name: "status type", type: :single_option}
     ]
 
     {:ok, %{new_class: _}} = Builder.create_class(%Class{name: "test", properties: props})
@@ -364,7 +365,7 @@ defmodule Helix.Test.BuilderTest do
 
     props = [
       %Property{name: "parent class", type: :single_link, link_class_id: 1},
-      %Property{name: "status type", type: :single_select}
+      %Property{name: "status type", type: :single_option}
     ]
 
     {:ok, _} = Builder.create_properties(%ClassIdentifier{id: test_class.id}, props)
@@ -471,11 +472,11 @@ defmodule Helix.Test.BuilderTest do
            ]
   end
 
-  test "adding multiple_select property creates additional table" do
+  test "adding multiple_option property creates additional table" do
     {:ok, %{new_class: test_class}} = Builder.create_class(%Class{name: "a", properties: []})
 
     props = [
-      %Property{name: "colors", type: :multiple_select},
+      %Property{name: "colors", type: :multiple_option},
       %Property{name: "name", type: :text, length: 100}
     ]
 
@@ -502,9 +503,9 @@ defmodule Helix.Test.BuilderTest do
            ]
   end
 
-  test "creating class with multiple_select property creates additional table" do
+  test "creating class with multiple_option property creates additional table" do
     props = [
-      %Property{name: "colors", type: :multiple_select},
+      %Property{name: "colors", type: :multiple_option},
       %Property{name: "name", type: :text, length: 200}
     ]
 

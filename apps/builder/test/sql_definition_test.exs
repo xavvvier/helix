@@ -27,8 +27,18 @@ defmodule Helix.Test.SqlDefinitionTest do
       class = %Class{
         name: "Class1",
         properties: [
-          %Property{name: "p1", type: :number},
-          %Property{name: "p2", type: :text, length: 250}
+          %Property{name: "a", type: :number},
+          %Property{name: "b", type: :big_number},
+          %Property{name: "c", type: :date},
+          %Property{name: "d", type: :time},
+          %Property{name: "e", type: :datetime},
+          %Property{name: "f", type: :text, length: 100},
+          %Property{name: "g", type: :big_text},
+          %Property{name: "h", type: :decimal, precision: 8, scale: 2},
+          %Property{name: "i", type: :yes_no},
+          %Property{name: "j", type: :file},
+          %Property{name: "k", type: :single_link, link_class_id: 1},
+          %Property{name: "u", type: :single_option},
         ]
       }
 
@@ -40,8 +50,18 @@ defmodule Helix.Test.SqlDefinitionTest do
                  %Table{name: "Class1", prefix: "public"},
                  [
                    {:add, :id, :serial, primary_key: true},
-                   {:add, "p1", {:integer, [null: nil]}, []},
-                   {:add, "p2", {:string, [size: 250, null: nil]}, []}
+                   {:add, "a", :integer, []},
+                   {:add, "b", :bigint, []},
+                   {:add, "c", :date, []},
+                   {:add, "d", :time, []},
+                   {:add, "e", :timestamp, []},
+                   {:add, "f", :string, [size: 100, null: nil]},
+                   {:add, "g", :text, []},
+                   {:add, "h", :numeric, [precision: 8, scale: 2, null: nil]},
+                   {:add, "i", :boolean, []},
+                   {:add, "j", :binary, []},
+                   {:add, "k", :integer, []},
+                   {:add, "u", :integer, []},
                  ]
                }
              ]
