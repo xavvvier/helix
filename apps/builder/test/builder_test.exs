@@ -23,7 +23,7 @@ defmodule Helix.Test.BuilderTest do
       properties: [
         %Property{name: "p1", type: :number},
         %Property{name: "p2", type: :text, length: 250},
-        %Property{name: "p3\"--", type: :single_option},
+        %Property{name: "p3\"--", type: :single_option}
       ]
     }
 

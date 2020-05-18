@@ -7,39 +7,119 @@ defmodule Helix.Builder.SqlDefinition do
   """
 
   def ddl_for_create(%Class{} = class) do
-    name = class.name
-    schema = if class.is_system, do: "sys", else: "public"
+    {schema, table_name} = table_for_class(class)
 
     # Define the mandatory primary key column
     pk_column = {:add, :id, :serial, primary_key: true}
 
-    # Determines the table :create operations for complex columns,
-    # such as :multiple_file, :multiple_link, :multiple_option
-    extra_table_for_complex_properties = []
-
     [
       {
         :create,
-        %Table{name: name, prefix: schema},
+        %Table{name: table_name, prefix: schema},
         [
           pk_column | ddl_create_props(class)
         ]
       }
-      | extra_table_for_complex_properties
+      | ddl_create_complex_props(class)
     ]
   end
 
+  @sys_schema "sys"
+  @public_schema "public"
+
+  # Determines the sql schema and table name for a Class
+  defp table_for_class(%Class{name: name, is_system: is_system}) do
+    if is_system do
+      {@sys_schema, name}
+    else
+      {@public_schema, name}
+    end
+  end
+
+  @simple_props [
+    :number,
+    :big_number,
+    :date,
+    :time,
+    :datetime,
+    :big_text,
+    :text,
+    :file,
+    :yes_no
+  ]
+
   defp ddl_create_props(%Class{} = class) do
     class.properties
-    |> Enum.map(fn prop ->
-      ddl_new_property(prop)
-    end)
+    |> Enum.filter(&Enum.member?(@simple_props, &1.type))
+    |> Enum.flat_map(&ddl_new_property/1)
   end
 
   # Defines the ddl statement to create a new property.
+  defp ddl_new_property(%Property{type: :file, name: name}) do
+    [
+      {:add, name, :string, [size: 500]},
+      {:add, name <> "_content", :binary, []},
+      {:add, name <> "_size", :bigint, []}
+    ]
+  end
+
   defp ddl_new_property(prop) do
     {ecto_type, opts} = Property.ecto_type(prop)
-    {:add, prop.name, ecto_type, opts}
+    [
+      {:add, prop.name, ecto_type, opts}
+    ]
+  end
+
+  @complex_props [:multiple_file, :multiple_link, :multiple_option]
+
+  # Determines the table :create operations for complex columns,
+  # such as :multiple_file, :multiple_link, :multiple_option
+  defp ddl_create_complex_props(%Class{} = class) do
+    {schema, table_name} = table_for_class(class)
+    class.properties
+    |> Enum.filter(&Enum.member?(@complex_props, &1.type))
+    |> Enum.map(&ddl_new_complex_property(&1, schema, table_name))
+  end
+
+  defp ddl_new_complex_property(%Property{type: :multiple_file, name: name}, schema, main_table) do
+    {
+      :create,
+      %Table{name: "#{main_table}_#{name}", prefix: schema},
+      [
+        {:add, :id, :serial, primary_key: true},
+        {:add, main_table <> "_id", %Reference{table: main_table, prefix: schema, type: :integer}, []},
+        {:add, :name, :string, [size: 500]},
+        {:add, :content, :binary, []},
+        {:add, :size, :bigint, []}
+      ]
+    }
+  end
+  defp ddl_new_complex_property(%Property{type: :multiple_link, name: name, link_class: linked_class}, schema, main_table) do
+    {related_schema, related_table} = table_for_class(linked_class)
+    {
+      :create,
+      %Table{name: "#{main_table}_#{name}", prefix: schema},
+      [
+        {:add, main_table <> "_id", %Reference{table: main_table, prefix: schema, type: :integer},
+          [primary_key: true]},
+        {:add, related_table <> "_id",
+          %Reference{table: related_table, prefix: related_schema, type: :integer},
+          [primary_key: true]}
+      ]
+    }
+  end
+  defp ddl_new_complex_property(%Property{type: :multiple_option, name: name}, schema, main_table) do
+    {
+      :create,
+      %Table{name: "#{main_table}_#{name}", prefix: schema},
+      [
+        {:add, main_table <> "_id", %Reference{table: main_table, prefix: schema, type: :integer},
+          [primary_key: true]},
+        {:add, "option_id",
+          %Reference{table: "option", prefix: @sys_schema, type: :integer},
+          [primary_key: true]}
+      ]
+    }
   end
 
   @doc """

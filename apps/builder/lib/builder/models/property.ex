@@ -101,7 +101,7 @@ defmodule Helix.Builder.Property do
     datetime: :timestamp,
     big_text: :text,
     text: :string,
-    file: :binary,
+    file: :string,
     yes_no: :boolean,
     single_link: :integer,
     single_option: :integer
@@ -144,6 +144,7 @@ defmodule Helix.Builder.Property do
   def ecto_type(%Property{type: type, nullable: nil}) when is_atom(type) do
     {@ecto_mapping[type], []}
   end
+
   def ecto_type(%Property{type: type, nullable: nullable}) when is_atom(type) do
     {@ecto_mapping[type], [null: nullable]}
   end

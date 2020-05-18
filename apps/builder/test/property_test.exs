@@ -128,7 +128,7 @@ defmodule Helix.Test.PropertyTest do
       |> Enum.map(&build_prop(&1, nil, nil, nil, nil))
       |> Enum.map(&elem(&1, 0))
 
-    assert result == ~w[integer bigint date time timestamp text boolean binary integer integer]a
+    assert result == ~w[integer bigint date time timestamp text boolean string integer integer]a
     assert build_prop(:text, 10, nil, nil, nil) == {:string, size: 10, null: nil}
     assert build_prop(:text, 10, 0, nil, nil) == {:string, size: 10, null: nil}
 
