@@ -1,6 +1,6 @@
 defmodule Helix.Builder.Impl do
   alias Helix.Builder.Repo
-  alias Helix.Builder.{Class, ClassIdentifier, Property, ObjectMapping, SqlDefinition}
+  alias Helix.Builder.{Class, ClassIdentifier, Property, SqlDefinition}
   alias Ecto.Multi
 
   import Ecto.Query, only: [from: 2]
@@ -73,12 +73,22 @@ defmodule Helix.Builder.Impl do
   def create_class(%Class{} = class) do
     Multi.new()
     |> Multi.insert(:new_class, Class.changeset(class))
-    |> Multi.run(:sql_table, fn _repo, changes -> create_sql_table(changes) end)
-    |> Multi.run(:table_mapping, fn _repo, changes -> insert_table_mapping(changes) end)
-    |> Multi.run(:column_creation, fn _repo, changes -> create_columns(changes) end)
-    |> Multi.run(:property_mapping, fn _repo, changes -> insert_property_mappings(changes) end)
+    |> Multi.run(:ddl_execution, fn _repo, changes -> create_sql_tables(changes) end)
     |> Repo.transaction()
     |> format_error()
+  end
+
+  defp create_sql_tables(%{new_class: class}) do
+    definitions = SqlDefinition.ddl_for_create(class)
+    Enum.reduce_while(definitions, {:ok, nil}, fn ddl, {_, _} ->
+      case execute_ddl(ddl) do
+        {:ok, _} ->
+          {:cont, {:ok, definitions}}
+
+        error ->
+          {:halt, error}
+      end
+    end)
   end
 
   @doc """
@@ -87,35 +97,7 @@ defmodule Helix.Builder.Impl do
   @spec create_properties(ClassIdentifier.t(), [Property.t()]) ::
           {:ok, map()} | {:error, atom(), any()}
   def create_properties(%ClassIdentifier{} = class, properties) do
-    Repo.transaction(fn ->
-      class = Repo.get!(Class, class.id)
-      sql_table = sql_table_for_class(class.id)
-
-      with {:ok, created_props} = create_class_properties(class, properties),
-           {:ok, column_creation} <-
-             create_columns(%{
-               new_class: %{class | properties: created_props},
-               sql_table: sql_table
-             }),
-           {:ok, _} <-
-             insert_property_mappings(%{column_creation: column_creation, sql_table: sql_table}) do
-        {:ok, :success}
-      else
-        {:error, reason} -> Repo.rollback(reason)
-      end
-    end)
-    |> format_error()
-  end
-
-  defp create_sql_table(%{new_class: class}) do
-    name = sqlify(class.name)
-    schema = table_schema(class.is_system)
-    ddl = SqlDefinition.ddl_for_table(schema, name)
-
-    case execute_ddl(ddl) do
-      {:ok, _} -> {:ok, {schema, name}}
-      error -> error
-    end
+      {:error, :not_implemented}
   end
 
   defp execute_ddl(ddl, opts \\ []) do
@@ -129,118 +111,7 @@ defmodule Helix.Builder.Impl do
     end
   end
 
-  defp create_class_properties(class, properties) do
-    result =
-      properties
-      |> Enum.map(fn property ->
-        property =
-          Property.changeset(%Property{}, %{
-            name: property.name,
-            type: property.type,
-            length: property.length,
-            precision: property.precision,
-            scale: property.scale,
-            class_id: class.id,
-            link_class_id: property.link_class_id
-          })
-
-        Repo.insert!(property)
-      end)
-
-    {:ok, result}
-  end
-
-  defp create_columns(%{new_class: class, sql_table: sql_table}) do
-    Enum.reduce_while(class.properties, {:ok, []}, fn x, {_, acc} ->
-      case create_column(sql_table, x) do
-        {:ok, table_name, column} ->
-          {:cont, {:ok, [{x.id, table_name, column} | acc]}}
-
-        error ->
-          {:halt, error}
-      end
-    end)
-  end
-
-  defp create_column(schema_table, property) do
-    column_name = sqlify(property.name)
-
-    {ddl, table, column} =
-      cond do
-        property.type in [:single_link, :multiple_link] ->
-          related_table = sql_table_for_class(property.link_class_id)
-          SqlDefinition.ddl_for_property(property, schema_table, column_name, related_table)
-
-        property.type in [:single_option, :multiple_option] ->
-          SqlDefinition.ddl_for_property(
-            property,
-            schema_table,
-            column_name,
-            {@sys_schema, "option"}
-          )
-
-        true ->
-          SqlDefinition.ddl_for_property(property, schema_table, column_name, nil)
-      end
-
-    case execute_ddl(ddl) do
-      {:ok, _} -> {:ok, table, column}
-      error -> error
-    end
-  end
-
-  defp insert_table_mapping(%{sql_table: {schema, name}, new_class: class}) do
-    %ObjectMapping{
-      id: class.id,
-      class: @class_class_id,
-      schema: schema,
-      table: name
-    }
-    |> ObjectMapping.changeset()
-    |> Repo.insert()
-  end
-
-  defp insert_property_mappings(%{column_creation: columns, sql_table: {schema, _}}) do
-    columns
-    |> Enum.each(fn {id, table, column} ->
-      mapping =
-        ObjectMapping.changeset(%ObjectMapping{
-          id: id,
-          class: @property_class_id,
-          schema: schema,
-          table: table,
-          column: column
-        })
-
-      Repo.insert(mapping)
-    end)
-
-    {:ok, columns}
-  end
-
-  defp sql_table_for_class(id) when is_integer(id) do
-    case Repo.get_by(ObjectMapping, id: id, class: @class_class_id) do
-      nil -> raise ArgumentError, "The class with id #{id} does not exist"
-      mapping -> {mapping.schema, mapping.table}
-    end
-  end
-
-  defp sql_table_for_class(_id) do
-    raise ArgumentError, "Illegal class id argument"
-  end
-
-  defp table_schema(true), do: @sys_schema
-  defp table_schema(_), do: @public_schema
-
-  defp sqlify(name) when is_binary(name) do
-    name
-    |> String.replace(~r/[^a-zA-Z0-9]/, "_")
-    |> String.downcase()
-  end
-
-  defp format_error(
-         {:error, :column_creation, %{postgres: %{code: :duplicate_column}} = error, _}
-       ) do
+  defp format_error({:error, :ddl_execution, %{postgres: %{code: :duplicate_column}} = error, _}) do
     {:error, :duplicated_property, error}
   end
 
@@ -249,7 +120,7 @@ defmodule Helix.Builder.Impl do
   end
 
   defp format_error({:error, :new_class, error, _}) do
-    {:error, :class_already_exist, error}
+    {:error, :class_already_exists, error}
   end
 
   defp format_error(x), do: x

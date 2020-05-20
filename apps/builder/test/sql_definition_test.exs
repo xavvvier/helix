@@ -6,6 +6,7 @@ defmodule Helix.Test.SqlDefinitionTest do
   doctest Helix.Builder.SqlDefinition
 
   describe "ddl_for_create" do
+    @tag :single
     test "ddl_for_create with no properties" do
       class = %Class{name: "Class1", properties: []}
       ddl = SqlDefinition.ddl_for_create(class)
@@ -21,9 +22,10 @@ defmodule Helix.Test.SqlDefinitionTest do
              ]
     end
 
+    @tag :single
     test "ddl_for_create with properties" do
       class = %Class{
-        name: "Class1",
+        name: "class1",
         properties: [
           %Property{name: "a", type: :number},
           %Property{name: "b", type: :big_number},
@@ -35,7 +37,7 @@ defmodule Helix.Test.SqlDefinitionTest do
           %Property{name: "h", type: :decimal, precision: 8, scale: 2},
           %Property{name: "i", type: :yes_no},
           %Property{name: "j", type: :file},
-          %Property{name: "k", type: :single_link, link_class_id: 1},
+          %Property{name: "k", type: :single_link, link_class: %Class{name: "kellogs"}},
           %Property{name: "u", type: :single_option}
         ]
       }
@@ -45,7 +47,7 @@ defmodule Helix.Test.SqlDefinitionTest do
       assert ddl == [
                {
                  :create,
-                 %Table{name: "Class1", prefix: "public"},
+                 %Table{name: "class1", prefix: "public"},
                  [
                    {:add, :id, :serial, primary_key: true},
                    {:add, "a", :integer, []},
@@ -60,8 +62,9 @@ defmodule Helix.Test.SqlDefinitionTest do
                    {:add, "j", :string, [size: 500]},
                    {:add, "j_content", :binary, []},
                    {:add, "j_size", :bigint, []},
-                   {:add, "k", :integer, []},
-                   {:add, "u", :integer, []}
+                   {:add, "k", %Reference{table: "kellogs", prefix: "public", type: :integer},
+                    []},
+                   {:add, "u", %Reference{table: "option", prefix: "sys", type: :integer}, []}
                  ]
                }
              ]
@@ -70,7 +73,7 @@ defmodule Helix.Test.SqlDefinitionTest do
     @tag single: true
     test "ddl_for_create with complex properties" do
       class = %Class{
-        name: "Complex",
+        name: "complex",
         properties: [
           %Property{name: "regular field", type: :text, length: 430, nullable: false},
           %Property{name: "attachments", type: :multiple_file},
@@ -84,7 +87,7 @@ defmodule Helix.Test.SqlDefinitionTest do
       assert ddl == [
                {
                  :create,
-                 %Table{name: "Complex", prefix: "public"},
+                 %Table{name: "complex", prefix: "public"},
                  [
                    {:add, :id, :serial, primary_key: true},
                    {:add, "regular field", :string, [size: 430, null: false]}
@@ -92,11 +95,11 @@ defmodule Helix.Test.SqlDefinitionTest do
                },
                {
                  :create,
-                 %Table{name: "Complex_attachments", prefix: "public"},
+                 %Table{name: "complex_attachments", prefix: "public"},
                  [
                    {:add, :id, :serial, primary_key: true},
-                   {:add, "Complex_id",
-                    %Reference{table: "Complex", prefix: "public", type: :integer}, []},
+                   {:add, "complex_id",
+                    %Reference{table: "complex", prefix: "public", type: :integer}, []},
                    {:add, :name, :string, [size: 500]},
                    {:add, :content, :binary, []},
                    {:add, :size, :bigint, []}
@@ -104,22 +107,24 @@ defmodule Helix.Test.SqlDefinitionTest do
                },
                {
                  :create,
-                 %Table{name: "Complex_team", prefix: "public"},
+                 %Table{name: "complex_team", prefix: "public"},
                  [
-                   {:add, "Complex_id",
-                    %Reference{table: "Complex", prefix: "public", type: :integer}, [primary_key: true]},
+                   {:add, "complex_id",
+                    %Reference{table: "complex", prefix: "public", type: :integer},
+                    [primary_key: true]},
                    {:add, "Player_id",
-                    %Reference{table: "Player", prefix: "public", type: :integer}, [primary_key: true]},
+                    %Reference{table: "Player", prefix: "public", type: :integer},
+                    [primary_key: true]}
                  ]
                },
                {
                  :create,
-                 %Table{name: "Complex_colors", prefix: "public"},
+                 %Table{name: "complex_colors", prefix: "public"},
                  [
-                   {:add, "Complex_id", %Reference{table: "Complex", prefix: "public", type: :integer},
+                   {:add, "complex_id",
+                    %Reference{table: "complex", prefix: "public", type: :integer},
                     [primary_key: true]},
-                   {:add, "option_id",
-                     %Reference{table: "option", prefix: "sys", type: :integer},
+                   {:add, "option_id", %Reference{table: "option", prefix: "sys", type: :integer},
                     [primary_key: true]}
                  ]
                }
