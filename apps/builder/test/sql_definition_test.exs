@@ -6,7 +6,6 @@ defmodule Helix.Test.SqlDefinitionTest do
   doctest Helix.Builder.SqlDefinition
 
   describe "ddl_for_create" do
-    @tag :single
     test "ddl_for_create with no properties" do
       class = %Class{name: "Class1", properties: []}
       ddl = SqlDefinition.ddl_for_create(class)
@@ -22,7 +21,6 @@ defmodule Helix.Test.SqlDefinitionTest do
              ]
     end
 
-    @tag :single
     test "ddl_for_create with properties" do
       class = %Class{
         name: "class1",
@@ -70,7 +68,6 @@ defmodule Helix.Test.SqlDefinitionTest do
              ]
     end
 
-    @tag single: true
     test "ddl_for_create with complex properties" do
       class = %Class{
         name: "complex",

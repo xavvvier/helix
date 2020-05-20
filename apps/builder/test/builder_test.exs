@@ -174,8 +174,7 @@ defmodule Helix.Test.BuilderTest do
            ]
   end
 
-  @tag :skip
-  test "create class with all property data types at once" do
+  test "create class with simple property data types at once" do
     props = [
       %Property{name: "a", type: :number},
       %Property{name: "b", type: :big_number},
@@ -187,7 +186,7 @@ defmodule Helix.Test.BuilderTest do
       %Property{name: "h", type: :decimal, precision: 8, scale: 2},
       %Property{name: "i", type: :yes_no},
       %Property{name: "j", type: :file},
-      %Property{name: "k", type: :single_link, link_class: %Class{name: "Class", is_system: true, id: 1}},
+      %Property{name: "k", type: :single_link, link_class_id: 1},
       %Property{name: "u", type: :single_option},
       %Property{name: "y", type: :multiple_option}
     ]
@@ -206,8 +205,8 @@ defmodule Helix.Test.BuilderTest do
              {"h", "numeric", nil, 8, 2},
              {"i", "boolean", nil, nil, nil},
              {"id", "integer", nil, 32, 0},
-             {"j", "bytea", nil, nil, nil},
-             {"j_name", "character varying", 500, nil, nil},
+             {"j", "character varying", 500, nil, nil},
+             {"j_content", "bytea", nil, nil, nil},
              {"j_size", "bigint", nil, 64, 0},
              {"k", "integer", nil, 32, 0},
              {"u", "integer", nil, 32, 0}

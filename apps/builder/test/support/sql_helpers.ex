@@ -15,31 +15,6 @@ defmodule Helix.Builder.Test.SqlHelpers do
     Repo.all(properties_query)
   end
 
-  def property_mappings(schema, table) do
-    query =
-      from(om in "object_mapping",
-        join: pr in "property",
-        on: om.id == pr.id,
-        where: om.class == 2 and om.schema == ^schema and om.table == ^table,
-        select: {pr.name, om.schema, om.table, om.column},
-        order_by: fragment("lower(?)", om.column)
-      )
-
-    query = %{query | prefix: "sys"}
-    Repo.all(query)
-  end
-
-  def class_mapping(class_id) do
-    query =
-      from(om in "object_mapping",
-        where: om.id == ^class_id and om.class == 1,
-        select: {om.schema, om.table, om.column}
-      )
-
-    query = %{query | prefix: "sys"}
-    Repo.one(query)
-  end
-
   def table_columns(schema, table) do
     query =
       from(c in "columns",

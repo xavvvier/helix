@@ -5,11 +5,6 @@ defmodule Helix.Builder.Impl do
 
   import Ecto.Query, only: [from: 2]
 
-  @class_class_id 1
-  @property_class_id 2
-  @sys_schema "sys"
-  @public_schema "public"
-
   @moduledoc """
   Provides the functionality to create `Class` and `Property` elements with their underline sql objects
   """
@@ -71,6 +66,7 @@ defmodule Helix.Builder.Impl do
   """
   @spec create_class(Class.t()) :: {:ok, map()} | {:error, atom(), tuple()}
   def create_class(%Class{} = class) do
+    class = resolve_linked_properties(class)
     Multi.new()
     |> Multi.insert(:new_class, Class.changeset(class))
     |> Multi.run(:ddl_execution, fn _repo, changes -> create_sql_tables(changes) end)
@@ -91,12 +87,27 @@ defmodule Helix.Builder.Impl do
     end)
   end
 
+
+  defp resolve_linked_properties(class) do
+    mapped_linked_props= 
+      class.properties
+      |> Enum.map(&solve_link/1)
+    %{class | properties: mapped_linked_props}
+  end
+
+  defp solve_link(%Property{link_class_id: id} = prop) when is_integer(id) and id > 0 do
+    class = Repo.get!(Class, id)
+    %{prop | link_class: class}
+    |> IO.inspect(label: "new prop")
+  end
+  defp solve_link(prop), do: prop
+
   @doc """
   Adds properties to a `Class` creating columns in the related sql table
   """
   @spec create_properties(ClassIdentifier.t(), [Property.t()]) ::
           {:ok, map()} | {:error, atom(), any()}
-  def create_properties(%ClassIdentifier{} = class, properties) do
+  def create_properties(%ClassIdentifier{} = _class, _properties) do
       {:error, :not_implemented}
   end
 

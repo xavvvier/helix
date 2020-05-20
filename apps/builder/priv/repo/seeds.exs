@@ -1,15 +1,12 @@
 # Run as mix run priv/repo/seeds.exs
-alias Helix.Builder.{Class, Property, ObjectMapping}
+alias Helix.Builder.{Class, Property}
 alias Helix.Builder
 alias Helix.Builder.Repo
 
-for class <- [%{name: "Class", id: 1}, %{name: "Property", id: 2}] do
+for class <- [%{name: "class", id: 1}, %{name: "croperty", id: 2}] do
   if Repo.get_by(Class, name: class.name) == nil do
     Repo.insert!(%Class{name: class.name, id: class.id, is_system: :true})
     Ecto.Adapters.SQL.query(Repo, "ALTER sequence sys.class_id_seq restart WITH 3")
-  end
-  if Repo.get_by(ObjectMapping, id: class.id, class: 1) == nil do
-    Repo.insert!(%ObjectMapping{schema: "sys", id: class.id, class: 1, table: String.downcase(class.name)})
   end
 end
 
