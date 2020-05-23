@@ -7,7 +7,7 @@ defmodule Helix.Test.PropertyTest do
       Property.changeset(%Property{
         name: "any",
         type: :single_link,
-        link_class_id: nil
+        linked_class_id: nil
       })
 
     refute changeset.valid?
@@ -16,7 +16,7 @@ defmodule Helix.Test.PropertyTest do
       Property.changeset(%Property{
         name: "any",
         type: :single_link,
-        link_class_id: 0
+        linked_class_id: 0
       })
 
     refute changeset.valid?
@@ -25,7 +25,7 @@ defmodule Helix.Test.PropertyTest do
       Property.changeset(%Property{
         name: "any",
         type: :single_link,
-        link_class_id: 1
+        linked_class_id: 1
       })
 
     assert changeset.valid?
@@ -36,7 +36,7 @@ defmodule Helix.Test.PropertyTest do
       Property.changeset(%Property{
         name: "any",
         type: :multiple_link,
-        link_class_id: nil
+        linked_class_id: nil
       })
 
     refute changeset.valid?
@@ -45,7 +45,7 @@ defmodule Helix.Test.PropertyTest do
       Property.changeset(%Property{
         name: "any",
         type: :multiple_link,
-        link_class_id: 0
+        linked_class_id: 0
       })
 
     refute changeset.valid?
@@ -54,7 +54,7 @@ defmodule Helix.Test.PropertyTest do
       Property.changeset(%Property{
         name: "any",
         type: :multiple_link,
-        link_class_id: 1
+        linked_class_id: 1
       })
 
     assert changeset.valid?

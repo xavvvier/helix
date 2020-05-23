@@ -55,7 +55,7 @@ view = %Class{
   name: "option",
   is_system: :true,
   properties: [
-    %Property{name: "property", type: :single_link, link_class_id: 2, nullable: false},
+    %Property{name: "property", type: :single_link, linked_class_id: 2, nullable: false},
     %Property{name: "code", type: :text, length: 5},
     %Property{name: "name", type: :text, length: 200},
     %Property{name: "order", type: :number},

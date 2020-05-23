@@ -20,12 +20,12 @@ defmodule Helix.Builder.Property do
     # what class the property belongs to
     belongs_to(:class, Helix.Builder.Class)
     # what class the link type (single_link, multiple_link) property points to
-    belongs_to(:link_class, Helix.Builder.Class)
+    belongs_to(:linked_class, Helix.Builder.Class)
   end
 
   def changeset(property, params \\ %{}) do
     property
-    |> cast(params, [:class_id, :id, :name, :type, :length, :precision, :scale, :link_class_id])
+    |> cast(params, [:class_id, :id, :name, :type, :length, :precision, :scale, :linked_class_id])
     |> validate_length(:name, min: 1, max: 250)
     |> validate_links
     |> validate_text
@@ -78,14 +78,14 @@ defmodule Helix.Builder.Property do
 
     case changeset.valid? and type in [:single_link, :multiple_link] do
       true ->
-        value = get_field(changeset, :link_class_id)
+        value = get_field(changeset, :linked_class_id)
 
         case is_integer(value) and value > 0 do
           true ->
             changeset
 
           _ ->
-            add_error(changeset, :link_class, "Invalid link class id for #{type} field")
+            add_error(changeset, :linked_class, "Invalid linked class id for #{type} field")
         end
 
       _ ->

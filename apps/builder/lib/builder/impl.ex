@@ -56,8 +56,8 @@ defmodule Helix.Builder.Impl do
   defp properties do
     from(p in Property,
       join: c in assoc(p, :class),
-      left_join: l in assoc(p, :link_class),
-      preload: [class: c, link_class: l]
+      left_join: l in assoc(p, :linked_class),
+      preload: [class: c, linked_class: l]
     )
   end
 
@@ -67,11 +67,12 @@ defmodule Helix.Builder.Impl do
   @spec create_class(Class.t()) :: {:ok, map()} | {:error, atom(), tuple()}
   def create_class(%Class{} = class) do
     class = %{class | properties: resolve_linked_properties(class.properties)}
+
     Multi.new()
     |> Multi.insert(:new_class, Class.changeset(class))
-    |> Multi.run(:ddl_execution, fn _, %{new_class: class} -> 
+    |> Multi.run(:ddl_execution, fn _, %{new_class: class} ->
       SqlDefinition.ddl_for_create(class)
-      |> execute_definitions() 
+      |> execute_definitions()
     end)
     |> Repo.transaction()
     |> format_error()
@@ -85,10 +86,11 @@ defmodule Helix.Builder.Impl do
   def create_properties(%ClassIdentifier{id: id}, properties) do
     class = Repo.get!(Class, id)
     class = %{class | properties: resolve_linked_properties(properties)}
+
     Multi.new()
-    |> Multi.run(:ddl_execution, fn _, _ -> 
+    |> Multi.run(:ddl_execution, fn _, _ ->
       SqlDefinition.ddl_for_modify(class)
-      |> execute_definitions() 
+      |> execute_definitions()
     end)
     |> Repo.transaction()
     |> format_error()
@@ -99,10 +101,11 @@ defmodule Helix.Builder.Impl do
     |> Enum.map(&resolve_link/1)
   end
 
-  defp resolve_link(%Property{link_class_id: id} = prop) when is_integer(id) and id > 0 do
+  defp resolve_link(%Property{linked_class_id: id} = prop) when is_integer(id) and id > 0 do
     class = Repo.get!(Class, id)
-    %{prop | link_class: class}
+    %{prop | linked_class: class}
   end
+
   defp resolve_link(prop), do: prop
 
   defp execute_definitions(definitions) do

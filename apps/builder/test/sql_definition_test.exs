@@ -35,7 +35,7 @@ defmodule Helix.Test.SqlDefinitionTest do
           %Property{name: "h", type: :decimal, precision: 8, scale: 2},
           %Property{name: "i", type: :yes_no},
           %Property{name: "j", type: :file},
-          %Property{name: "k", type: :single_link, link_class: %Class{name: "kellogs"}},
+          %Property{name: "k", type: :single_link, linked_class: %Class{name: "kellogs"}},
           %Property{name: "u", type: :single_option}
         ]
       }
@@ -74,7 +74,7 @@ defmodule Helix.Test.SqlDefinitionTest do
         properties: [
           %Property{name: "regular field", type: :text, length: 430, nullable: false},
           %Property{name: "attachments", type: :multiple_file},
-          %Property{name: "team", type: :multiple_link, link_class: %Class{name: "Player"}},
+          %Property{name: "team", type: :multiple_link, linked_class: %Class{name: "Player"}},
           %Property{name: "colors", type: :multiple_option}
         ]
       }

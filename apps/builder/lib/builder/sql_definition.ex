@@ -26,6 +26,7 @@ defmodule Helix.Builder.SqlDefinition do
 
   def ddl_for_modify(%Class{} = class) do
     {schema, table_name} = table_for_class(class)
+
     [
       {
         :alter,
@@ -78,12 +79,12 @@ defmodule Helix.Builder.SqlDefinition do
     ]
   end
 
-  defp ddl_new_property(%Property{name: name, type: type, link_class: link_class})
+  defp ddl_new_property(%Property{name: name, type: type, linked_class: linked_class})
        when type in [:single_link, :single_option] do
     {ecto_type, opts} =
       case type do
         :single_link ->
-          {schema, table_name} = table_for_class(link_class)
+          {schema, table_name} = table_for_class(linked_class)
 
           {
             %Reference{table: table_name, prefix: schema, type: :integer},
@@ -96,6 +97,7 @@ defmodule Helix.Builder.SqlDefinition do
             []
           }
       end
+
     [
       {:add, name, ecto_type, opts}
     ]
@@ -103,6 +105,7 @@ defmodule Helix.Builder.SqlDefinition do
 
   defp ddl_new_property(%Property{} = prop) do
     {ecto_type, opts} = Property.ecto_type(prop)
+
     [
       {:add, prop.name, ecto_type, opts}
     ]
@@ -136,7 +139,7 @@ defmodule Helix.Builder.SqlDefinition do
   end
 
   defp ddl_new_complex_property(
-         %Property{type: :multiple_link, name: name, link_class: linked_class},
+         %Property{type: :multiple_link, name: name, linked_class: linked_class},
          schema,
          main_table
        ) do

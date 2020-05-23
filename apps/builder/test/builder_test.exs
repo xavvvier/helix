@@ -161,7 +161,7 @@ defmodule Helix.Test.BuilderTest do
       %Property{name: "h", type: :decimal, precision: 8, scale: 2},
       %Property{name: "i", type: :yes_no},
       %Property{name: "j", type: :file},
-      %Property{name: "k", type: :single_link, link_class_id: 1},
+      %Property{name: "k", type: :single_link, linked_class_id: 1},
       %Property{name: "u", type: :single_option},
       %Property{name: "y", type: :multiple_option}
     ]
@@ -202,7 +202,7 @@ defmodule Helix.Test.BuilderTest do
       %Property{name: "h", type: :decimal, precision: 8, scale: 2},
       %Property{name: "i", type: :yes_no},
       %Property{name: "j 5", type: :file},
-      %Property{name: "k", type: :single_link, link_class_id: 1},
+      %Property{name: "k", type: :single_link, linked_class_id: 1},
       %Property{name: "u", type: :single_option}
     ]
 
@@ -230,7 +230,7 @@ defmodule Helix.Test.BuilderTest do
 
   test "test constraint creation in create_class" do
     props = [
-      %Property{name: "parent class", type: :single_link, link_class_id: 1},
+      %Property{name: "parent class", type: :single_link, linked_class_id: 1},
       %Property{name: "status type", type: :single_option}
     ]
 
@@ -247,7 +247,7 @@ defmodule Helix.Test.BuilderTest do
     {:ok, %{new_class: test_class}} = Builder.create_class(%Class{name: "test", properties: []})
 
     props = [
-      %Property{name: "parent class", type: :single_link, link_class_id: 1},
+      %Property{name: "parent class", type: :single_link, linked_class_id: 1},
       %Property{name: "status type", type: :single_option}
     ]
 
@@ -259,7 +259,7 @@ defmodule Helix.Test.BuilderTest do
              {"status type", "sys", "option", "id"}
            ]
   end
-  
+
   test "creating class with multiple_file property creates additional table" do
     props = [
       %Property{name: "attachments", type: :multiple_file},
@@ -328,7 +328,7 @@ defmodule Helix.Test.BuilderTest do
     {:ok, %{new_class: tag_class}} = Builder.create_class(%Class{name: "tag", properties: []})
 
     props = [
-      %Property{name: "tags", type: :multiple_link, link_class_id: tag_class.id},
+      %Property{name: "tags", type: :multiple_link, linked_class_id: tag_class.id},
       %Property{name: "name", type: :text, length: 200}
     ]
 
