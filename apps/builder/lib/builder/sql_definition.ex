@@ -24,6 +24,18 @@ defmodule Helix.Builder.SqlDefinition do
     ]
   end
 
+  def ddl_for_modify(%Class{} = class) do
+    {schema, table_name} = table_for_class(class)
+    [
+      {
+        :alter,
+        %Table{name: table_name, prefix: schema},
+        ddl_create_props(class)
+      }
+      | ddl_create_complex_props(class)
+    ]
+  end
+
   @sys_schema "sys"
   @public_schema "public"
 

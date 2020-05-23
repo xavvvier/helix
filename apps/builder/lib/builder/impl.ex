@@ -66,17 +66,47 @@ defmodule Helix.Builder.Impl do
   """
   @spec create_class(Class.t()) :: {:ok, map()} | {:error, atom(), tuple()}
   def create_class(%Class{} = class) do
-    class = resolve_linked_properties(class)
+    class = %{class | properties: resolve_linked_properties(class.properties)}
     Multi.new()
     |> Multi.insert(:new_class, Class.changeset(class))
-    |> Multi.run(:ddl_execution, fn _repo, changes -> create_sql_tables(changes) end)
+    |> Multi.run(:ddl_execution, fn _, %{new_class: class} -> 
+      SqlDefinition.ddl_for_create(class)
+      |> execute_definitions() 
+    end)
     |> Repo.transaction()
     |> format_error()
   end
 
-  defp create_sql_tables(%{new_class: class}) do
-    definitions = SqlDefinition.ddl_for_create(class)
-    Enum.reduce_while(definitions, {:ok, nil}, fn ddl, {_, _} ->
+  @doc """
+  Adds properties to a `Class` creating columns in the related sql table
+  """
+  @spec create_properties(ClassIdentifier.t(), [Property.t()]) ::
+          {:ok, map()} | {:error, atom(), any()}
+  def create_properties(%ClassIdentifier{id: id}, properties) do
+    class = Repo.get!(Class, id)
+    class = %{class | properties: resolve_linked_properties(properties)}
+    Multi.new()
+    |> Multi.run(:ddl_execution, fn _, _ -> 
+      SqlDefinition.ddl_for_modify(class)
+      |> execute_definitions() 
+    end)
+    |> Repo.transaction()
+    |> format_error()
+  end
+
+  defp resolve_linked_properties(properties) do
+    properties
+    |> Enum.map(&resolve_link/1)
+  end
+
+  defp resolve_link(%Property{link_class_id: id} = prop) when is_integer(id) and id > 0 do
+    class = Repo.get!(Class, id)
+    %{prop | link_class: class}
+  end
+  defp resolve_link(prop), do: prop
+
+  defp execute_definitions(definitions) do
+    Enum.reduce_while(definitions, {:ok, nil}, fn ddl, _ ->
       case execute_ddl(ddl) do
         {:ok, _} ->
           {:cont, {:ok, definitions}}
@@ -85,30 +115,6 @@ defmodule Helix.Builder.Impl do
           {:halt, error}
       end
     end)
-  end
-
-
-  defp resolve_linked_properties(class) do
-    mapped_linked_props= 
-      class.properties
-      |> Enum.map(&solve_link/1)
-    %{class | properties: mapped_linked_props}
-  end
-
-  defp solve_link(%Property{link_class_id: id} = prop) when is_integer(id) and id > 0 do
-    class = Repo.get!(Class, id)
-    %{prop | link_class: class}
-    |> IO.inspect(label: "new prop")
-  end
-  defp solve_link(prop), do: prop
-
-  @doc """
-  Adds properties to a `Class` creating columns in the related sql table
-  """
-  @spec create_properties(ClassIdentifier.t(), [Property.t()]) ::
-          {:ok, map()} | {:error, atom(), any()}
-  def create_properties(%ClassIdentifier{} = _class, _properties) do
-      {:error, :not_implemented}
   end
 
   defp execute_ddl(ddl, opts \\ []) do

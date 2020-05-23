@@ -3,7 +3,7 @@ alias Helix.Builder.{Class, Property}
 alias Helix.Builder
 alias Helix.Builder.Repo
 
-for class <- [%{name: "class", id: 1}, %{name: "croperty", id: 2}] do
+for class <- [%{name: "class", id: 1}, %{name: "property", id: 2}] do
   if Repo.get_by(Class, name: class.name) == nil do
     Repo.insert!(%Class{name: class.name, id: class.id, is_system: :true})
     Ecto.Adapters.SQL.query(Repo, "ALTER sequence sys.class_id_seq restart WITH 3")
@@ -12,11 +12,11 @@ end
 
 #insert form
 form = %Class{
-  name: "Form",
+  name: "form",
   is_system: :true,
   properties: [
-    %Property{name: "Name", type: :text, length: 200},
-    %Property{name: "Order", type: :number}
+    %Property{name: "name", type: :text, length: 200},
+    %Property{name: "order", type: :number}
   ]
 }
 if Repo.get_by(Class, name: form.name) == nil do
@@ -25,12 +25,12 @@ end
 
 #insert tab
 tab = %Class{
-  name: "Tab",
+  name: "tab",
   is_system: :true,
   properties: [
-    %Property{name: "Name", type: :text, length: 200},
-    %Property{name: "Url", type: :text, length: 200},
-    %Property{name: "Order", type: :number}
+    %Property{name: "name", type: :text, length: 200},
+    %Property{name: "url", type: :text, length: 200},
+    %Property{name: "order", type: :number}
   ]
 }
 if Repo.get_by(Class, name: tab.name) == nil do
@@ -39,11 +39,11 @@ end
 
 #insert view
 view = %Class{
-  name: "View",
+  name: "view",
   is_system: :true,
   properties: [
-    %Property{name: "Name", type: :text, length: 200},
-    %Property{name: "Order", type: :number},
+    %Property{name: "name", type: :text, length: 200},
+    %Property{name: "order", type: :number},
   ]
 }
 if Repo.get_by(Class, name: view.name) == nil do
@@ -52,15 +52,15 @@ end
 
 #insert otion class
 view = %Class{
-  name: "Option",
+  name: "option",
   is_system: :true,
   properties: [
-    %Property{name: "Property", type: :single_link, link_class_id: 2, nullable: false},
-    %Property{name: "Code", type: :text, length: 5},
-    %Property{name: "Name", type: :text, length: 200},
-    %Property{name: "Order", type: :number},
-    %Property{name: "Color", type: :text, length: 10},
-    %Property{name: "Active", type: :yes_no},
+    %Property{name: "property", type: :single_link, link_class_id: 2, nullable: false},
+    %Property{name: "code", type: :text, length: 5},
+    %Property{name: "name", type: :text, length: 200},
+    %Property{name: "order", type: :number},
+    %Property{name: "color", type: :text, length: 10},
+    %Property{name: "active", type: :yes_no},
   ]
 }
 if Repo.get_by(Class, name: view.name) == nil do

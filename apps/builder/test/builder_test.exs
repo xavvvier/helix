@@ -131,31 +131,6 @@ defmodule Helix.Test.BuilderTest do
            ]
   end
 
-  test "create similar property in class fails" do
-    {:ok, %{new_class: test_class}} =
-      Builder.create_class(%Class{
-        name: "test",
-        is_system: true,
-        properties: [
-          %Property{name: "na%me", type: :text, length: 250}
-        ]
-      })
-
-    props = [
-      %Property{name: "na$me", type: :number}
-    ]
-
-    {:error, :duplicated_property, _error} =
-      Builder.create_properties(%ClassIdentifier{id: test_class.id}, props)
-
-    columns = SqlHelpers.table_columns("sys", "test")
-
-    assert columns == [
-             {"id", "integer", nil, 32, 0},
-             {"na_me", "character varying", 250, nil, nil}
-           ]
-  end
-
   test "create column in non-system" do
     {:ok, %{new_class: test_class}} = Builder.create_class(%Class{name: "test", properties: []})
 
@@ -170,7 +145,7 @@ defmodule Helix.Test.BuilderTest do
     assert columns == [
              {"id", "integer", nil, 32, 0},
              {"p1", "integer", nil, 32, 0},
-             {"p4_", "character varying", 250, nil, nil}
+             {"p4^", "character varying", 250, nil, nil}
            ]
   end
 
@@ -213,7 +188,6 @@ defmodule Helix.Test.BuilderTest do
            ]
   end
 
-  @tag :skip
   test "create properties with all data types" do
     {:ok, %{new_class: test_class}} = Builder.create_class(%Class{name: "test", properties: []})
 
@@ -246,15 +220,14 @@ defmodule Helix.Test.BuilderTest do
              {"h", "numeric", nil, 8, 2},
              {"i", "boolean", nil, nil, nil},
              {"id", "integer", nil, 32, 0},
-             {"j_5", "bytea", nil, nil, nil},
-             {"j_5_name", "character varying", 500, nil, nil},
-             {"j_5_size", "bigint", nil, 64, 0},
+             {"j 5", "character varying", 500, nil, nil},
+             {"j 5_content", "bytea", nil, nil, nil},
+             {"j 5_size", "bigint", nil, 64, 0},
              {"k", "integer", nil, 32, 0},
              {"u", "integer", nil, 32, 0}
            ]
   end
 
-  @tag :skip
   test "test constraint creation in create_class" do
     props = [
       %Property{name: "parent class", type: :single_link, link_class_id: 1},
@@ -265,12 +238,11 @@ defmodule Helix.Test.BuilderTest do
     fks = SqlHelpers.table_foreign_keys("public", "test")
 
     assert fks == [
-             {"parent_class", "sys", "class", "id"},
-             {"status_type", "sys", "option", "id"}
+             {"parent class", "sys", "class", "id"},
+             {"status type", "sys", "option", "id"}
            ]
   end
 
-  @tag :skip
   test "test constraint creation in create_properties" do
     {:ok, %{new_class: test_class}} = Builder.create_class(%Class{name: "test", properties: []})
 
@@ -283,8 +255,8 @@ defmodule Helix.Test.BuilderTest do
     fks = SqlHelpers.table_foreign_keys("public", "test")
 
     assert fks == [
-             {"parent_class", "sys", "class", "id"},
-             {"status_type", "sys", "option", "id"}
+             {"parent class", "sys", "class", "id"},
+             {"status type", "sys", "option", "id"}
            ]
   end
   
@@ -352,7 +324,6 @@ defmodule Helix.Test.BuilderTest do
            ]
   end
 
-  @tag :skip
   test "creating class with multiple_link property creates additional table" do
     {:ok, %{new_class: tag_class}} = Builder.create_class(%Class{name: "tag", properties: []})
 
