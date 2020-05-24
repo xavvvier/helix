@@ -1,65 +1,10 @@
 defmodule Helix.Builder.Impl do
-  alias Helix.Builder.Repo
-  alias Helix.Builder.{Class, ClassIdentifier, Property, SqlDefinition}
+  alias Helix.Builder.{Repo, Class, ClassIdentifier, Property, SqlDefinition}
   alias Ecto.Multi
-
-  import Ecto.Query, only: [from: 2]
 
   @moduledoc """
   Provides the functionality to create `Class` and `Property` elements with their underline sql objects
   """
-
-  @class_attrs [:id, :name, :is_system]
-
-  @doc """
-  List all the classes in the system
-  """
-  @spec list_classes() :: [Class.t()]
-  def list_classes() do
-    query =
-      from(Class,
-        select: ^@class_attrs,
-        order_by: :name
-      )
-
-    Repo.all(query)
-  end
-
-  @doc """
-  Get the class with the given id
-  """
-  @spec get_class!(id :: integer()) :: Class.t()
-  def get_class!(id) do
-    query =
-      from(c in Class,
-        select: ^@class_attrs,
-        where: c.id == ^id
-      )
-
-    Repo.one!(query)
-  end
-
-  def get_property!(id) do
-    query =
-      from([p, c, l] in properties(),
-        where: p.id == ^id
-      )
-
-    Repo.one!(query)
-  end
-
-  def list_properties() do
-    properties()
-    |> Repo.all()
-  end
-
-  defp properties do
-    from(p in Property,
-      join: c in assoc(p, :class),
-      left_join: l in assoc(p, :linked_class),
-      preload: [class: c, linked_class: l]
-    )
-  end
 
   @doc """
   Creates a new `Class` and its related database table and columns

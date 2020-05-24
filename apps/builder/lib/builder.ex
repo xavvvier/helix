@@ -32,34 +32,6 @@ defmodule Helix.Builder do
     GenServer.call(@server, {:create_properties, class, properties})
   end
 
-  @doc """
-  List all the classes in the system
-  """
-  def list_classes() do
-    Impl.list_classes()
-  end
-
-  @doc """
-  Get the class with the given id
-  """
-  def get_class!(id) do
-    Impl.get_class!(id)
-  end
-
-  @doc """
-  List all the properties in the system
-  """
-  def list_properties() do
-    Impl.list_properties()
-  end
-
-  @doc """
-  Get the property with the given id
-  """
-  def get_property!(id) do
-    Impl.get_property!(id)
-  end
-
   ## GenServer implementation
 
   def init(state) do
