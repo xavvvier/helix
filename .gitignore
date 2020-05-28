@@ -23,3 +23,18 @@ erl_crash.dump
 
 .sw*
 Session.vim
+
+# Ignore package tarball (built via "mix hex.build").
+console-*.tar
+
+# If NPM crashes, it generates a log, let's ignore it too.
+npm-debug.log
+
+# The directory NPM downloads your dependencies sources to.
+/apps/console/assets/node_modules/
+
+# Since we are building assets from assets/,
+# we ignore priv/static. You may want to comment
+# this depending on your deployment strategy.
+/apps/console/priv/static/
+prod.secret.exs
