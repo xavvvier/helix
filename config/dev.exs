@@ -13,7 +13,7 @@ config :builder, Helix.Builder.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :console, ConsoleWeb.Endpoint,
+config :helix_console, Helix.WebConsole.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
@@ -29,18 +29,18 @@ config :console, ConsoleWeb.Endpoint,
   ]
 
 # Watch static and templates for browser reloading.
-config :console, ConsoleWeb.Endpoint,
+config :helix_console, Helix.WebConsole.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/console_web/(live|views)/.*(ex)$",
-      ~r"lib/console_web/templates/.*(eex)$"
+      ~r"lib/web/(live|views)/.*(ex)$",
+      ~r"lib/web/templates/.*(eex)$"
     ]
   ]
 
 # Do not include metadata nor timestamps in development logs
-config :logger, :console, format: "[$level] $message\n"
+config :logger, :helix_console, format: "[$level] $message\n"
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.

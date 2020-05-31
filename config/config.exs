@@ -12,15 +12,15 @@ import Config
 config :builder, ecto_repos: [Helix.Builder.Repo]
 
 # Configures the endpoint
-config :console, ConsoleWeb.Endpoint,
+config :helix_console, Helix.WebConsole.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "X5ZHo5xYGew2kz00Jz3j8f1yJ41+9O7E2GDmfJGVD/nZ0/cGgOE4qui4v7CDuWAv",
-  render_errors: [view: ConsoleWeb.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: Console.PubSub,
+  render_errors: [view: Helix.WebConsole.ErrorView, accepts: ~w(html json), layout: false],
+  pubsub_server: Helix.WebConsole.PubSub,
   live_view: [signing_salt: "J+5V5zGd"]
 
 # Configures Elixir's Logger
-config :logger, :console,
+config :logger, :helix_console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
