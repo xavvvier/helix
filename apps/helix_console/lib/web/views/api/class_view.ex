@@ -10,6 +10,6 @@ defmodule Helix.WebConsole.Api.ClassView do
   end
 
   def render("class.json", %{class: class}) do
-    Map.take class, [:id, :name, :is_system]
+    Map.take(class, [:id, :name, :is_system])
   end
 end

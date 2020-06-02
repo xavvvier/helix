@@ -15,5 +15,4 @@ defmodule Helix.WebConsole.Api.PropertyController do
       render(conn, "show.json", property: property)
     end
   end
-
 end

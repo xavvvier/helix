@@ -22,11 +22,10 @@ defmodule Helix.WebConsole.Router do
 
   # Other scopes may use custom stacks.
   scope "/api", WebConsole do
-     pipe_through :api
+    pipe_through :api
 
     resources "/classes", Api.ClassController, except: [:update, :delete]
     resources "/properties", Api.PropertyController, only: [:index, :show]
-
   end
 
   # Enables LiveDashboard only for development

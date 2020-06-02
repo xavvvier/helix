@@ -2,21 +2,21 @@ defmodule Helix.WebConsole.Api.PropertyView do
   use Helix.WebConsole, :view
 
   def render("index.json", %{properties: props}) do
-    %{data: render_many(props, PropertyView, "property.json")}
+    render_many(props, PropertyView, "property.json")
   end
 
   def render("show.json", %{property: prop}) do
-    %{data: render_one(prop, PropertyView, "property.json")}
+    render_one(prop, PropertyView, "property.json")
   end
 
   def render("property.json", %{property: property}) do
     class = extract_class(property, :class)
-    link_class = extract_class(property, :link_class)
+    linked_class = extract_class(property, :linked_class)
 
     property
     |> Map.take([:id, :name, :type, :length, :precision, :scale, :nullable])
     |> Map.put(:class, class)
-    |> Map.put(:link_class, link_class)
+    |> Map.put(:linked_class, linked_class)
   end
 
   defp extract_class(property, field) do
@@ -25,5 +25,4 @@ defmodule Helix.WebConsole.Api.PropertyView do
       class -> %{id: class.id, name: class.name}
     end
   end
-
 end

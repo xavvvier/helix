@@ -15,5 +15,4 @@ defmodule Helix.WebConsole.Api.ClassController do
       render(conn, "show.json", class: class)
     end
   end
-
 end

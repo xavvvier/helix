@@ -1,5 +1,6 @@
 defmodule Helix.WebConsole.ErrorHelpers do
   alias Helix.WebConsole
+
   @moduledoc """
   Conveniences for translating and building error messages.
   """
