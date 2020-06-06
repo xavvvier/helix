@@ -24,4 +24,34 @@ defmodule Helix.WebConsole.Api.ClassControllerTest do
     conn = get(conn, "/api/classes/0")
     assert json_response(conn, 404) == "Not Found"
   end
+
+  describe "class creation" do
+
+    test "create class with no name fails", %{conn: conn} do
+      conn = post(conn, "/api/classes", %{
+        class: %{
+          name: "",
+          properties: []
+        }
+      })
+      [%{
+        "details" => %{"validation" => "required"},
+        "field" => "name",
+        "message" => "can't be blank"
+      }] = json_response(conn, 500)
+    end
+
+    test "create class with no props successes", %{conn: conn} do
+      conn = post(conn, "/api/classes", %{
+        class: %{
+          "name" => "test a",
+          "properties" => []
+        }
+      })
+      %{"class_id" => id} = json_response(conn, 200)
+      assert id > 0
+    end
+
+  end
+
 end

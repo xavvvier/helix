@@ -1,5 +1,6 @@
 defmodule Helix.Builder.Class do
   use Ecto.Schema
+  alias Helix.Builder.Class
   import Ecto.Changeset
 
   @typedoc """
@@ -17,8 +18,15 @@ defmodule Helix.Builder.Class do
   def changeset(class, params \\ %{}) do
     class
     |> cast(params, [:id, :name, :is_system])
-    |> unique_constraint(:unique_name, name: :table_name_is_system_index)
+    |> validate_required([:name])
     |> validate_length(:name, min: 1, max: 250)
+    |> unique_constraint(:unique_name, name: :table_name_is_system_index)
     |> cast_assoc(:properties)
+  end
+
+  def validate_params(params) do
+    %Class{}
+    |> changeset(params)
+    |> apply_action(:insert)
   end
 end
