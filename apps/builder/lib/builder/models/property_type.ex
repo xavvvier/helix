@@ -45,10 +45,20 @@ defmodule Helix.Builder.PropertyType do
   ##Examples
     iex> Helix.Builder.PropertyType.to_integer(:text)
     6
-
+    iex> Helix.Builder.PropertyType.to_integer("text")
+    6
   """
   def to_integer(atom) when is_atom(atom) do
-    @mapping[atom]
+    if atom in Map.keys(@mapping) do
+      @mapping[atom]
+    else
+      raise ArgumentError, message: "Illegal property type: #{atom}"
+    end
+  end
+
+  def to_integer(str) when is_binary(str) do
+    String.to_existing_atom(str)
+    |> to_integer()
   end
 
   def to_integer(non_atom), do: raise("an atom is expected, got #{inspect(non_atom)}")
@@ -69,4 +79,9 @@ defmodule Helix.Builder.PropertyType do
   end
 
   def to_atom(_), do: raise("an integer is expected")
+
+  def parse_type(type) when is_binary(type) do
+    String.to_existing_atom(type)
+  end
+  def parse_type(type) when is_atom(type), do: type
 end

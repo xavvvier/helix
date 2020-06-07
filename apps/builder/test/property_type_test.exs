@@ -12,7 +12,7 @@ defmodule Helix.Test.PropertyTypeTest do
   end
 
   test "to_integer fails when argument is not atom" do
-    assert_raise RuntimeError, fn ->
+    assert_raise ArgumentError, fn ->
       PropertyType.to_integer("not_atom")
     end
   end

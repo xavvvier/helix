@@ -19,15 +19,15 @@ defmodule Helix.WebConsole.Api.ClassController do
   end
 
   def create(conn, %{"class" => params}) do
-    with {:ok, class} <- Class.validate_params(params) do
-      id = class
-           |> Builder.create_class()
-           |> extract_id()
-      json(conn, id)
+    with {:ok, class} <- Class.validate_params(params),
+      {:ok, result} <- Builder.create_class(class) 
+    do
+      conn
+      |> json(extract_id(result))
     end
   end
 
-  defp extract_id({:ok, %{new_class: %{id: id}}}) do
+  defp extract_id(%{new_class: %{id: id}}) do
     %{class_id: id}
   end
 end

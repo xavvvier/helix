@@ -15,23 +15,22 @@ defmodule Helix.WebConsole.FallbackController do
     |> render(:"403")
   end
 
-  def call(conn, {:error, %{valid?: false, errors: errors}}) when is_list(errors) do
-    json_response = parse_validation_error(errors)
+  def call(conn, {:error, _error_type, %Ecto.Changeset{} = changeset}) do
+    call(conn, {:error, changeset})
+  end
+
+  def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
+    json_response = parse_validation_error(changeset)
     conn
       |> put_status(500)
       |> json(json_response)
   end
 
-  defp parse_validation_error(errors) do
-    errors
-    |> Enum.map(fn {field, {message, [{validation_key, validation_value}]}} -> 
-      %{
-        field: field,
-        message: message,
-        details: %{
-          validation_key => validation_value
-        }
-      }
+  defp parse_validation_error(changeset) do
+    Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
+      Enum.reduce(opts, msg, fn {key, value}, acc ->
+        String.replace(acc, "%{#{key}}", to_string(value))
+      end)
     end)
   end
 end

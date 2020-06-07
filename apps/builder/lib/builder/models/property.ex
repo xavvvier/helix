@@ -26,10 +26,22 @@ defmodule Helix.Builder.Property do
   def changeset(property, params \\ %{}) do
     property
     |> cast(params, [:class_id, :id, :name, :type, :length, :precision, :scale, :linked_class_id])
+    |> cast_type()
     |> validate_length(:name, min: 1, max: 250)
     |> validate_links
     |> validate_text
     |> validate_decimal
+  end
+
+  defp cast_type(changeset) do
+    type = get_field(changeset, :type)
+
+    case is_atom(type) do
+      true -> changeset
+      false ->
+        type_as_atom = PropertyType.parse_type(type)
+        put_change(changeset, :type, type_as_atom)
+    end
   end
 
   defp validate_decimal(changeset) do

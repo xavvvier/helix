@@ -1,6 +1,6 @@
 defmodule Helix.Builder.Class do
   use Ecto.Schema
-  alias Helix.Builder.Class
+  alias Helix.Builder.{Class, Property}
   import Ecto.Changeset
 
   @typedoc """
@@ -12,7 +12,7 @@ defmodule Helix.Builder.Class do
   schema "class" do
     field(:name, :string)
     field(:is_system, :boolean, default: false)
-    has_many(:properties, Helix.Builder.Property)
+    has_many(:properties, Property)
   end
 
   def changeset(class, params \\ %{}) do
@@ -24,9 +24,11 @@ defmodule Helix.Builder.Class do
     |> cast_assoc(:properties)
   end
 
+  ## Validates parameters sent as part of an api call
   def validate_params(params) do
     %Class{}
     |> changeset(params)
     |> apply_action(:insert)
   end
+
 end
