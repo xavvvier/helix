@@ -1,9 +1,12 @@
 test_task:
   container:
-    image: elixir:latest
+    image: elixir:1.10.3
   mix_cache:
     folder: deps
     fingerprint_script: cat mix.lock
     populate_script: mix deps.get
+  install_hex_script:
+     - mix local.hex --force
+     - mix local.rebar --force
   compile_script: mix compile
   test_script: mix test
