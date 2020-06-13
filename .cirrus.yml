@@ -1,0 +1,38 @@
+test_task:
+  container:
+    image: elixir:1.10.3
+    additional_containers:
+       - name: postgres 
+         image: postgres:12.3
+         port: 5432
+         env:
+            POSTGRES_USER: xavvvier
+            POSTGRES_DB: helix_test
+            POSTGRES_PASSWORD: changeMe,Seriously
+  env:
+     MIX_ENV: test
+
+  install_hex_script:
+     - mix local.hex --force
+     - mix local.rebar --force
+
+  deps_cache:
+    folder: deps
+    fingerprint_script: cat mix.lock
+    populate_script: 
+      - mix deps.get
+
+  build_cache:
+    folder: _build
+    fingerprint_script:
+       - echo ${CIRRUS_BRANCH}
+       - cat mix.lock 
+    populate_script:
+      - mix compile
+
+  migrate_db_script:
+     - mix ecto.create
+     - mix ecto.migrate
+     - mix run apps/builder/priv/repo/seeds.exs
+
+  test_script: mix test
