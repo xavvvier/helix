@@ -1,6 +1,7 @@
 test_task:
   container:
     image: elixir:1.10.3
+    image: postgres:12.3
   install_hex_script:
      - mix local.hex --force
      - mix local.rebar --force
