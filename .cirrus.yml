@@ -19,10 +19,13 @@ test_task:
   mix_cache:
     folder: deps
     fingerprint_script: cat mix.lock
-    populate_script: mix do deps.get, compile
+    populate_script: 
+      - mix deps.get
+      - mix compile
 
   migrate_db_script:
-     - mix do ecto.create, ecto.migrate
+     - mix ecto.create
+     - mix ecto.migrate
      - mix run apps/builder/priv/repo/seeds.exs
 
   test_script: mix test
