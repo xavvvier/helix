@@ -1,14 +1,14 @@
 test_task:
   container:
     image: elixir:1.10.3
-    aditional_containers:
-       -name: postgres 
-        image: postgres:12.3
-        port: 5432
-        env:
-           POSTGRES_USER: xavvvier
-           POSTGRES_DB: helix_test
-           POSTGRES_PASSWORD:
+    additional_containers:
+       - name: postgres 
+         image: postgres:12.3
+         port: 5432
+         env:
+            POSTGRES_USER: xavvvier
+            POSTGRES_DB: helix_test
+            POSTGRES_PASSWORD:
   env:
      MIX_ENV: test
 
