@@ -23,6 +23,7 @@ test_task:
       - mix deps.get
       - mix compile
 
+  check_db_ready: pg_isready
   migrate_db_script:
      - mix ecto.create
      - mix ecto.migrate
