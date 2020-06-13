@@ -10,7 +10,7 @@ test_task:
          env:
             POSTGRES_USER: xavvvier
             POSTGRES_DB: helix_test
-            POSTGRES_PASSWORD:
+            POSTGRES_PASSWORD: changeMe,Seriously
   env:
      MIX_ENV: test
 

@@ -3,8 +3,9 @@ use Mix.Config
 config :builder, Helix.Builder.Repo,
   database: "helix_test",
   username: "xavvvier",
-  password: "",
-  hostname: "127.0.0.1",
+  password: "changeMe,Seriously",
+  hostname: "localhost",
+  port: 5432,
   pool: Ecto.Adapters.SQL.Sandbox
 
 # We don't run a server during test. If one is required,
