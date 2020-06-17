@@ -10,7 +10,8 @@ defmodule HX.Application do
       # Start the Ecto repository
       HX.Repo,
       # Start the PubSub system
-      {Phoenix.PubSub, name: HX.PubSub}
+      {Phoenix.PubSub, name: HX.PubSub},
+      HX.Builder
     ]
 
     Supervisor.start_link(children, strategy: :one_for_one, name: HX.Supervisor)
