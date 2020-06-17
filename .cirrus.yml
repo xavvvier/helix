@@ -33,6 +33,6 @@ test_task:
   migrate_db_script:
      - mix ecto.create
      - mix ecto.migrate
-     - mix run apps/builder/priv/repo/seeds.exs
+     - mix run apps/helix/priv/repo/seeds.exs
 
   test_script: mix test
