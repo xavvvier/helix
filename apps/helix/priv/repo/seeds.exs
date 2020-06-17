@@ -1,7 +1,7 @@
 # Run as mix run priv/repo/seeds.exs
 alias HX.Builder.{Class, Property}
 alias HX.Builder
-alias HX.Builder.Repo
+alias HX.Repo
 
 for class <- [%{name: "class", id: 1}, %{name: "property", id: 2}] do
   if Repo.get_by(Class, name: class.name) == nil do
