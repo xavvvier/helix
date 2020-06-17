@@ -7,7 +7,7 @@
 # The directory Mix downloads your dependencies sources to.
 /deps/
 
-# Where third-party dependencies like ExDoc output generated docs.
+# Where 3rd-party dependencies like ExDoc output generated docs.
 /doc/
 
 # Ignore .fetch files in case you like to edit your project deps locally.
@@ -19,22 +19,18 @@ erl_crash.dump
 # Also ignore archive artifacts (built via "mix archive.build").
 *.ez
 
-.DS_Store
-
-.sw*
-Session.vim
-
 # Ignore package tarball (built via "mix hex.build").
-console-*.tar
+helix_web-*.tar
 
 # If NPM crashes, it generates a log, let's ignore it too.
 npm-debug.log
 
 # The directory NPM downloads your dependencies sources to.
-/apps/helix_web/assets/node_modules/
+/assets/node_modules/
 
 # Since we are building assets from assets/,
 # we ignore priv/static. You may want to comment
 # this depending on your deployment strategy.
-/apps/helix_web/priv/static/
-prod.secret.exs
+/priv/static/
+
+node_modules/
