@@ -18,7 +18,7 @@ defmodule HXWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    live "/live", PageLive, :index
+    live "/class", ClassLive, :index
   end
 
   scope "/api", HXWeb do

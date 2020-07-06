@@ -1,0 +1,22 @@
+<h3>Class creation</h3>
+<section class="row">
+  <form>
+    <label>
+      Name
+      <input type="text" name="name" value="<%= @name %>">
+    </label>
+    <h4>Properties</h4>
+    <%= for property <- @properties do %>
+      <div>
+        <input type="text" name="names[]" value="<%= property.name %>">
+        <select name="types[]">
+          <%= options_for_select(["Text": :text, "Number": :number, "Other": :other], property.type) %>
+        </select>
+      </div>
+    <% end %>
+    <a href="#" phx-click="add-new-property">Add new</a>
+  </form>
+</section>
+<section class="row">
+  <button type="submit">Create</button>
+</section>
