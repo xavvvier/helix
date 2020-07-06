@@ -1,19 +1,18 @@
 defmodule HXWeb.Api.ClassController do
   use HXWeb, :controller
 
-  alias HX.Builder.Query
   alias HX.Builder.Class
   alias HX.Builder.Impl, as: Builder
 
   action_fallback HXWeb.FallbackController
 
   def index(conn, _params) do
-    classes = Query.list_classes()
+    classes = HX.list_classes()
     render(conn, "index.json", classes: classes)
   end
 
   def show(conn, %{"id" => id}) do
-    with {:ok, class} <- Query.get_class(id) do
+    with {:ok, class} <- HX.get_class(id) do
       render(conn, "show.json", class: class)
     end
   end
