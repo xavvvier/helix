@@ -37,7 +37,9 @@ defmodule HX.Builder.Property do
     type = get_field(changeset, :type)
 
     case is_atom(type) do
-      true -> changeset
+      true ->
+        changeset
+
       false ->
         type_as_atom = PropertyType.parse_type(type)
         put_change(changeset, :type, type_as_atom)

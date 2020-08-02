@@ -1,17 +1,24 @@
 defmodule HXWeb.ClassLive do
   use HXWeb, :live_view
+  alias HX.Builder.{Class, PropertyType}
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, name: "test", properties: [
-      %{name: "a\"bc", type: :number}
-    ])}
+    socket =
+      socket
+      |> assign(
+        class: Class.default_class(),
+        property_types: PropertyType.list_atom_types()
+      )
+
+    {:ok, socket}
   end
 
-  def handle_event("add-new-property", _, socket) do
-    new_property = %{name: "def", type: :text}
-    properties = socket.assigns.properties ++ [new_property]
-    socket = assign(socket, properties: properties)
+  def handle_event("add-property", _, socket) do
+    new_property = %{name: "", type: :text}
+    class = socket.assigns.class
+    properties = class.properties ++ [new_property]
+    socket = assign(socket, class: %{class | properties: properties})
     {:noreply, socket}
   end
 

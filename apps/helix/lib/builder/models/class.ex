@@ -15,6 +15,15 @@ defmodule HX.Builder.Class do
     has_many(:properties, Property)
   end
 
+  def default_class do
+    %Class{
+      name: "",
+      properties: [
+        %{name: "Name", type: :text}
+      ]
+    }
+  end
+
   def changeset(class, params \\ %{}) do
     class
     |> cast(params, [:id, :name, :is_system])
@@ -30,5 +39,4 @@ defmodule HX.Builder.Class do
     |> changeset(params)
     |> apply_action(:insert)
   end
-
 end

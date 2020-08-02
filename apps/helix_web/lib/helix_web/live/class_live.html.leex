@@ -3,18 +3,18 @@
   <form>
     <label>
       Name
-      <input type="text" name="name" value="<%= @name %>">
+      <input type="text" name="name" value="<%= @class.name %>">
     </label>
     <h4>Properties</h4>
-    <%= for property <- @properties do %>
+    <%= for property <- @class.properties do %>
       <div>
         <input type="text" name="names[]" value="<%= property.name %>">
         <select name="types[]">
-          <%= options_for_select(["Text": :text, "Number": :number, "Other": :other], property.type) %>
+          <%= options_for_select(@property_types, property.type) %>
         </select>
       </div>
     <% end %>
-    <a href="#" phx-click="add-new-property">Add new</a>
+    <a href="#" phx-click="add-property">Add new</a>
   </form>
 </section>
 <section class="row">

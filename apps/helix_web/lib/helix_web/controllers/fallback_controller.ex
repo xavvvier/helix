@@ -21,9 +21,10 @@ defmodule HXWeb.FallbackController do
 
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     json_response = parse_validation_error(changeset)
+
     conn
-      |> put_status(500)
-      |> json(json_response)
+    |> put_status(500)
+    |> json(json_response)
   end
 
   defp parse_validation_error(changeset) do

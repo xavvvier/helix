@@ -19,8 +19,7 @@ defmodule HXWeb.Api.ClassController do
 
   def create(conn, %{"class" => params}) do
     with {:ok, class} <- Class.validate_params(params),
-      {:ok, result} <- Builder.create_class(class) 
-    do
+         {:ok, result} <- Builder.create_class(class) do
       conn
       |> json(extract_id(result))
     end

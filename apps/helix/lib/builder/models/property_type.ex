@@ -39,6 +39,10 @@ defmodule HX.Builder.PropertyType do
     Enum.to_list(@mapping)
   end
 
+  def list_atom_types() do
+    Keyword.keys(list_types)
+  end
+
   @doc """
   Parses the atom representation of a data type to its integer representation in the database.
 
@@ -83,5 +87,6 @@ defmodule HX.Builder.PropertyType do
   def parse_type(type) when is_binary(type) do
     String.to_existing_atom(type)
   end
+
   def parse_type(type) when is_atom(type), do: type
 end

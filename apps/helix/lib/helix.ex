@@ -32,6 +32,7 @@ defmodule HX do
         select: ^@class_attrs,
         where: c.id == ^id
       )
+
     query |> Repo.one() |> tuple_response
   end
 
@@ -47,6 +48,7 @@ defmodule HX do
       from([p, c, l] in properties(),
         where: p.id == ^id
       )
+
     query |> Repo.one() |> tuple_response
   end
 
