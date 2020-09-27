@@ -7,13 +7,20 @@ defmodule HXWeb.ClassLive do
     socket =
       socket
       |> assign(
-        class: Class.default_class(),
-        property_types: PropertyType.list_atom_types()
+        changeset:
+          Class.change_class(%{
+            name: "",
+            properties: [
+              %{name: "Name", type: :text}
+            ]
+          })
       )
+      |> assign(property_types: PropertyType.list_atom_types())
 
     {:ok, socket}
   end
 
+  @impl true
   def handle_event("add-property", _, socket) do
     new_property = %{name: "", type: :text}
     class = socket.assigns.class
@@ -21,5 +28,4 @@ defmodule HXWeb.ClassLive do
     socket = assign(socket, class: %{class | properties: properties})
     {:noreply, socket}
   end
-
 end

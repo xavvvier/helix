@@ -40,6 +40,7 @@ defmodule HXWeb.Api.ClassControllerTest do
       } = json_response(conn, 500)
     end
 
+    @tag :only
     test "create class with no props successes", %{conn: conn} do
       conn =
         post(conn, "/api/classes", %{

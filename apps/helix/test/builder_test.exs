@@ -2,9 +2,8 @@ defmodule HX.Test.BuilderTest do
   use ExUnit.Case
   alias HX.Builder.Test.SqlHelpers
   alias HX.Repo
+  alias HX.Builder
   alias HX.Builder.{Class, ClassIdentifier, Property}
-  alias HX.Builder.Impl, as: Builder
-  doctest Builder
 
   setup do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)

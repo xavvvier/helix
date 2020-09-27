@@ -1,8 +1,7 @@
 defmodule HXWeb.Api.ClassController do
   use HXWeb, :controller
 
-  alias HX.Builder.Class
-  alias HX.Builder.Impl, as: Builder
+  alias HX.Builder
 
   action_fallback HXWeb.FallbackController
 
@@ -18,7 +17,7 @@ defmodule HXWeb.Api.ClassController do
   end
 
   def create(conn, %{"class" => params}) do
-    with {:ok, class} <- Class.validate_params(params),
+    with {:ok, class} <- Builder.validate_class(params),
          {:ok, result} <- Builder.create_class(class) do
       conn
       |> json(extract_id(result))
