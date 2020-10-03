@@ -1,18 +1,27 @@
 <h3>Class creation</h3>
 <section class="row">
-  <form>
-    <label>
-      Name
-      <input type="text" name="name" value="<%= @class.name %>">
-    </label>
+  <%= f = form_for @changeset, "#", phx_change: "validate" %>
+	 <div class="field">
+		  <%= text_input f, :name, placeholder: "Name", phx_debounce: "blur" %> 
+		  <%= error_tag f, :name %>
+	 </div>
     <h4>Properties</h4>
-    <%= for property <- @class.properties do %>
-      <div>
-        <input type="text" name="names[]" value="<%= property.name %>">
-        <select name="types[]">
-          <%= options_for_select(@property_types, property.type) %>
-        </select>
+    <%= for property_form <- inputs_for(f, :properties) do %>
+	 <div style="border: 1px solid red">
+	   
+      <div class="field">
+		  <%= text_input property_form, :name %>
+		  <%= error_tag property_form, :name %>
+		  <%= select property_form, :type, @property_types %>
       </div>
+		<%= if property_form.source.changes.type in [:text] do %>
+		<div class="field">
+		  <%= text_input property_form, :length, placeholder: "Length" %> 
+		  <%= error_tag property_form, :length %>
+		</div>
+		<% end %>
+		  <%= inspect(property_form) %>
+	 </div>
     <% end %>
     <a href="#" phx-click="add-property">Add new</a>
   </form>

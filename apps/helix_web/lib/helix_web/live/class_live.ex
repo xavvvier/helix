@@ -1,6 +1,6 @@
 defmodule HXWeb.ClassLive do
   use HXWeb, :live_view
-  alias HX.Builder.{Class, PropertyType}
+  alias HX.Builder.{Class, Property, PropertyType}
 
   @impl true
   def mount(_params, _session, socket) do
@@ -22,10 +22,30 @@ defmodule HXWeb.ClassLive do
 
   @impl true
   def handle_event("add-property", _, socket) do
+    new_property =
+      %{name: "", type: :text}
+      |> Property.change_property()
+
+    changeset =
+      socket.assigns.changeset
+      |> Ecto.Changeset.update_change(:properties, fn props ->
+        props ++ [new_property]
+      end)
+
+    socket = assign(socket, changeset: changeset)
+
+    {:noreply, socket}
+  end
+
+  def handle_event("validate", %{"class" => params}, socket) do
     new_property = %{name: "", type: :text}
-    class = socket.assigns.class
-    properties = class.properties ++ [new_property]
-    socket = assign(socket, class: %{class | properties: properties})
+
+    changeset =
+      Class.change_class(params)
+      |> Map.put(:action, :insert)
+
+    socket = assign(socket, changeset: changeset)
+
     {:noreply, socket}
   end
 end

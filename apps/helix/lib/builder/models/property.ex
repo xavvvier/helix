@@ -28,9 +28,15 @@ defmodule HX.Builder.Property do
     |> cast(params, [:class_id, :id, :name, :type, :length, :precision, :scale, :linked_class_id])
     |> cast_type()
     |> validate_length(:name, min: 1, max: 250)
+    |> validate_required([:name])
     |> validate_links
     |> validate_text
     |> validate_decimal
+  end
+
+  def change_property(params) do
+    %Property{}
+    |> changeset(params)
   end
 
   defp cast_type(changeset) do
