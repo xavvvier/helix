@@ -40,7 +40,7 @@ defmodule HX.Builder.PropertyType do
   end
 
   def list_atom_types() do
-    Keyword.keys(list_types)
+    Keyword.keys(list_types())
   end
 
   @doc """

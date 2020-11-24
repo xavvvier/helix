@@ -1,31 +1,44 @@
 <h3>Class creation</h3>
 <section class="row">
-  <%= f = form_for @changeset, "#", phx_change: "validate" %>
+  <%= f = form_for @changeset, "#", phx_change: "validate", phx_submit: "create" %>
 	 <div class="field">
-		  <%= text_input f, :name, placeholder: "Name", phx_debounce: "blur" %> 
+		  <%= text_input f, :name, placeholder: "Name", phx_debounce: "blur" %>
 		  <%= error_tag f, :name %>
 	 </div>
     <h4>Properties</h4>
     <%= for property_form <- inputs_for(f, :properties) do %>
-	 <div style="border: 1px solid red">
-	   
-      <div class="field">
-		  <%= text_input property_form, :name %>
-		  <%= error_tag property_form, :name %>
-		  <%= select property_form, :type, @property_types %>
-      </div>
-		<%= if property_form.source.changes.type in [:text] do %>
-		<div class="field">
-		  <%= text_input property_form, :length, placeholder: "Length" %> 
-		  <%= error_tag property_form, :length %>
-		</div>
-		<% end %>
-		  <%= inspect(property_form) %>
-	 </div>
+			<div class="field">
+				<%= text_input property_form, :name, phx_debounce: "blur" %>
+				<%= error_tag property_form, :name %>
+				<%= select property_form, :type, @property_types %>
+			</div>
+			<%= if property_form.source.changes.type in [:text] do %>
+				<div class="field">
+					<%= text_input property_form, :length, placeholder: "Length", phx_debounce: "blur" %>
+					<%= error_tag property_form, :length %>
+				</div>
+			<% end %>
+			<%= if property_form.source.changes.type in [:decimal] do %>
+				<div class="field">
+					<%= text_input property_form, :scale, placeholder: "Scale", phx_debounce: "blur" %>
+					<%= error_tag property_form, :scale %>
+				</div>
+				<div class="field">
+					<%= text_input property_form, :precision, placeholder: "Precision", phx_debounce: "blur" %>
+					<%= error_tag property_form, :precision %>
+				</div>
+			<% end %>
+			<%= if property_form.source.changes.type in [:single_link, :multiple_link] do %>
+				<div class="field">
+					<%= select property_form, :linked_class_id, [
+						[key: "Select one" , value: "" ] |
+						@existing_classes
+					] %>
+					<%= error_tag property_form, :linked_class %>
+				</div>
+			<% end %>
     <% end %>
     <a href="#" phx-click="add-property">Add new</a>
+    <button type="submit">Create</button>
   </form>
-</section>
-<section class="row">
-  <button type="submit">Create</button>
 </section>

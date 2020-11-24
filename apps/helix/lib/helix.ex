@@ -25,7 +25,7 @@ defmodule HX do
   @doc """
   Gets the class with the given id
   """
-  @spec get_class(id :: integer()) :: Class.t()
+  @spec get_class(id :: integer()) :: {:error, :not_found} | {:ok, Class.t()}
   def get_class(id) do
     query =
       from(c in Class,
@@ -42,7 +42,7 @@ defmodule HX do
   @doc """
   Gets the property with the given id
   """
-  @spec get_property(id :: integer()) :: Property.t()
+  @spec get_property(id :: integer()) :: {:ok, Property.t()} | {:error, :not_found}
   def get_property(id) do
     query =
       from([p, c, l] in properties(),

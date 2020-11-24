@@ -54,22 +54,33 @@ defmodule HX.Builder.Property do
 
   defp validate_decimal(changeset) do
     type = get_field(changeset, :type)
-
     case changeset.valid? and type == :decimal do
       true ->
-        scale = get_field(changeset, :scale)
-        precision = get_field(changeset, :precision)
-
-        case is_integer(scale) and scale > 0 and is_integer(precision) and precision > 0 do
-          true ->
-            changeset
-
-          _ ->
-            add_error(changeset, :length, "Invalid precision/scale for decimal field")
-        end
-
+        changeset
+        |> validate_scale()
+        |> validate_precision()
       _ ->
         changeset
+    end
+  end
+
+  defp validate_scale(changeset) do
+    scale = get_field(changeset, :scale)
+    valid_scale = is_integer(scale) and scale > 0
+    if valid_scale do
+      changeset
+    else
+      add_error(changeset, :scale, "Invalid scale for decimal field")
+    end
+  end
+
+  defp validate_precision(changeset) do
+    precision = get_field(changeset, :precision)
+    valid_precision = is_integer(precision) and precision > 0
+    if valid_precision do
+      changeset
+    else
+      add_error(changeset, :precision, "Invalid precision for decimal field")
     end
   end
 
