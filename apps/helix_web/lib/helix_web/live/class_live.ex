@@ -44,19 +44,17 @@ defmodule HXWeb.ClassLive do
       Class.change_class(params)
       |> Map.put(:action, :insert)
 
+    IO.inspect(changeset, label: "after class changeset")
     {:noreply, assign(socket, changeset: changeset)}
   end
 
   def handle_event("create", %{"class" => params}, socket) do
     with {:ok, changeset} <- Builder.validate_class(params),
-         {:ok, result} <- Builder.create_class(changeset)
-    do
-      IO.inspect(result.new_class.id, label: "created class id")
+         {:ok, result} <- Builder.create_class(changeset) do
       {:noreply,
        socket
        |> put_flash(:info, "class created with id #{result.new_class.id}")
-       |> redirect(to: Routes.class_path(HXWeb.Endpoint, :index))
-      }
+       |> redirect(to: Routes.class_path(HXWeb.Endpoint, :index))}
     else
       {:error, changeset} ->
         socket = assign(socket, changeset: changeset)

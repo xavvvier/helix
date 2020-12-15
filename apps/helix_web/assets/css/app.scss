@@ -30,3 +30,13 @@
 .alert:empty {
   display: none;
 }
+
+.phx-no-feedback.invalid-feedback, .phx-no-feedback.valid-feedback {
+  display: none;
+}
+
+.phx-no-feedback input {
+  border-color: #dee2e6 !important;
+  padding-right: 0 !important;
+  background-image: none !important;
+}

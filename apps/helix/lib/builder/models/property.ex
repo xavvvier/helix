@@ -54,11 +54,13 @@ defmodule HX.Builder.Property do
 
   defp validate_decimal(changeset) do
     type = get_field(changeset, :type)
+
     case changeset.valid? and type == :decimal do
       true ->
         changeset
         |> validate_scale()
         |> validate_precision()
+
       _ ->
         changeset
     end
@@ -67,6 +69,7 @@ defmodule HX.Builder.Property do
   defp validate_scale(changeset) do
     scale = get_field(changeset, :scale)
     valid_scale = is_integer(scale) and scale > 0
+
     if valid_scale do
       changeset
     else
@@ -77,6 +80,7 @@ defmodule HX.Builder.Property do
   defp validate_precision(changeset) do
     precision = get_field(changeset, :precision)
     valid_precision = is_integer(precision) and precision > 0
+
     if valid_precision do
       changeset
     else
@@ -116,7 +120,7 @@ defmodule HX.Builder.Property do
             changeset
 
           _ ->
-            add_error(changeset, :linked_class, "Invalid linked class id for #{type} field")
+            add_error(changeset, :linked_class_id, "Invalid linked class id for #{type} field")
         end
 
       _ ->
