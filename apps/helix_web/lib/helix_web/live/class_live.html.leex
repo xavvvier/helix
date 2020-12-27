@@ -12,31 +12,25 @@
 				<%= error_tag property_form, :name %>
 				<%= select property_form, :type, @property_types %>
 			</div>
-			<%= if property_form.source.changes.type in [:text] do %>
-				<div class="field">
-					<%= text_input property_form, :length, placeholder: "Length", phx_debounce: "blur" %>
-					<%= error_tag property_form, :length %>
-				</div>
-			<% end %>
-			<%= if property_form.source.changes.type in [:decimal] do %>
-				<div class="field">
-					<%= text_input property_form, :scale, placeholder: "Scale", phx_debounce: "blur" %>
-					<%= error_tag property_form, :scale %>
-				</div>
-				<div class="field">
-					<%= text_input property_form, :precision, placeholder: "Precision", phx_debounce: "blur" %>
-					<%= error_tag property_form, :precision %>
-				</div>
-			<% end %>
-			<%= if property_form.source.changes.type in [:single_link, :multiple_link] do %>
-				<div class="field">
-					<%= select property_form, :linked_class_id, [
-						[key: "Select one" , value: "" ] |
-						@existing_classes
-					] %>
-					<%= error_tag property_form, :linked_class_id %>
-				</div>
-			<% end %>
+			<div class="field <%= visible_when(property_form.source.changes.type, :text) %>" id="text_length_field">
+				<%= text_input property_form, :length, placeholder: "Length", phx_debounce: "blur" %>
+				<%= error_tag property_form, :length %>
+			</div>
+			<div class="field <%= visible_when(property_form.source.changes.type, :decimal) %>" id="decimal_scale_field">
+				<%= text_input property_form, :scale, placeholder: "Scale", phx_debounce: "blur" %>
+				<%= error_tag property_form, :scale %>
+			</div>
+			<div class="field <%= visible_when(property_form.source.changes.type, :decimal) %>" id="decimal_scale_field">
+				<%= text_input property_form, :precision, placeholder: "Precision", phx_debounce: "blur" %>
+				<%= error_tag property_form, :precision %>
+			</div>
+			<div class="field <%= visible_when(property_form.source.changes.type, [:single_link, :multiple_link]) %>" id="decimal_scale_field">
+				<%= select property_form, :linked_class_id, [
+					[key: "Select one" , value: "" ] |
+					@existing_classes
+				] %>
+				<%= error_tag property_form, :linked_class_id %>
+			</div>
     <% end %>
     <a href="#" phx-click="add-property">Add new</a>
     <button type="submit">Create</button>

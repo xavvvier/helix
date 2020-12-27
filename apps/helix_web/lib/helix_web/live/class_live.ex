@@ -3,30 +3,30 @@ defmodule HXWeb.ClassLive do
   alias HX.Builder.{Class, Property, PropertyType}
   alias HX.Builder
 
+  defp default_property do
+    %{name: "", type: :text, length: 200, precision: 4, scale: 20}
+  end
   @impl true
   def mount(_params, _session, socket) do
+    initial_property = default_property() |> Map.put(:name, "Name")
     socket =
       socket
       |> assign(
         changeset:
           Class.change_class(%{
             name: "",
-            properties: [
-              %{name: "Name", type: :text, length: 200}
-            ]
+            properties: [ initial_property ]
           })
       )
       |> assign(property_types: PropertyType.list_atom_types())
       |> assign(existing_classes: Enum.map(HX.list_classes(), &{&1.name, &1.id}))
 
-    {:ok, socket}
+    {:ok, socket }
   end
 
   @impl true
   def handle_event("add-property", _, socket) do
-    new_property =
-      %{name: "", type: :text, length: 200}
-      |> Property.change_property()
+    new_property = default_property() |> Property.change_property()
 
     changeset =
       socket.assigns.changeset
@@ -44,7 +44,6 @@ defmodule HXWeb.ClassLive do
       Class.change_class(params)
       |> Map.put(:action, :insert)
 
-    IO.inspect(changeset, label: "after class changeset")
     {:noreply, assign(socket, changeset: changeset)}
   end
 
@@ -61,4 +60,5 @@ defmodule HXWeb.ClassLive do
         {:noreply, socket}
     end
   end
+
 end

@@ -24,6 +24,7 @@ defmodule HXWeb do
       import Plug.Conn
       import HXWeb.Gettext
       alias HXWeb.Router.Helpers, as: Routes
+      import Phoenix.LiveView.Controller
     end
   end
 
@@ -90,6 +91,7 @@ defmodule HXWeb do
       import Phoenix.View
 
       import HXWeb.ErrorHelpers
+      import HXWeb.ViewUtils
       import HXWeb.Gettext
       alias HXWeb.Router.Helpers, as: Routes
     end

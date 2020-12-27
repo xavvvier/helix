@@ -2,6 +2,9 @@
 @import "./phoenix.css";
 @import "../node_modules/nprogress/nprogress.css";
 
+.hide {
+  display: none;
+}
 /* Alerts and form errors */
 .alert {
   padding: 15px;
