@@ -1,5 +1,4 @@
 <h3>Class creation</h3>
-<section class="row">
   <%= f = form_for @changeset, "#", phx_change: "validate", phx_submit: "create" %>
 	 <div class="field">
 		  <%= text_input f, :name, placeholder: "Name", phx_debounce: "blur" %>
@@ -7,9 +6,12 @@
 	 </div>
     <h4>Properties</h4>
     <%= for property_form <- inputs_for(f, :properties) do %>
+		<div class="property">
 			<div class="field">
 				<%= text_input property_form, :name, phx_debounce: "blur" %>
 				<%= error_tag property_form, :name %>
+			</div>
+			<div class="field">
 				<%= select property_form, :type, @property_types %>
 			</div>
 			<div class="field <%= visible_when(property_form.source.changes.type, :text) %>" id="text_length_field">
@@ -31,8 +33,8 @@
 				] %>
 				<%= error_tag property_form, :linked_class_id %>
 			</div>
+		</div>
     <% end %>
     <a href="#" phx-click="add-property">Add new</a>
     <button type="submit">Create</button>
   </form>
-</section>
