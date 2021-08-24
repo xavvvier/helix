@@ -12,10 +12,15 @@ import "../css/app.scss"
 //     import {Socket} from "phoenix"
 //     import socket from "./socket"
 //
-import "phoenix_html"
-import {Socket} from "phoenix"
-import NProgress from "nprogress"
-import LiveSocket from "phoenix_live_view"
+import 'phoenix_html';
+import NProgress from 'nprogress';
+// import {Socket} from "phoenix"
+// import LiveSocket from "phoenix_live_view"
+// Temp fix for webpack error: https://github.com/phoenixframework/phoenix/issues/4160#issuecomment-762482868
+import * as Phoenix from 'phoenix';
+const { Socket } = Phoenix;
+import * as LiveView from 'phoenix_live_view';
+const { LiveSocket } = LiveView;
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})

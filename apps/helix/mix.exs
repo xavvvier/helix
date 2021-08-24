@@ -37,8 +37,8 @@ defmodule HX.MixProject do
   defp deps do
     [
       {:phoenix_pubsub, "~> 2.0"},
-      {:ecto_sql, "~> 3.5.3"},
-      {:postgrex, ">= 0.15.7"},
+      {:ecto_sql, "~> 3.7.0"},
+      {:postgrex, ">= 0.15.10"},
       {:jason, "~> 1.0"},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]
