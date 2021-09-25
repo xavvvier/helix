@@ -4,6 +4,7 @@ defmodule HX.Builder do
   alias Ecto.Multi
   alias HX.Repo
 
+
   @moduledoc """
   Context module grouping functionality related to `Class` and `Property` in the system
   """

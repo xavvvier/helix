@@ -17,7 +17,6 @@ defmodule HXWeb.ErrorHelpers do
         phx_feedback_for: input_id(form, field)
       )
     end)
-    |> IO.inspect(label: "error tag for field #{field}")
   end
 
   @doc """
