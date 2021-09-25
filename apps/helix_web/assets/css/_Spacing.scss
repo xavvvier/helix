@@ -14,7 +14,7 @@ fieldset,
 input,
 select,
 textarea {
-  margin-bottom: 1.5rem
+  margin-bottom: .5rem
 }
 
 blockquote,
@@ -27,4 +27,33 @@ pre,
 table,
 ul {
   margin-bottom: 2.5rem;
+}
+
+// Margin
+// t -> top
+// b -> bottom
+// r -> right
+// l -> left
+// y -> vertical: top & bottom
+// x -> horizontal: left & right
+// 0 -> 0
+// 1p -> 1px
+// 2p -> 2px
+// 4p -> 4px
+// 1 -> 1rem
+// 1.5 -> 1.5rem
+// 2 -> 2rem
+
+.my1 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.px2 {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+.card {
+  background-color: var(--color-card-background);
+  box-shadow: 4px 4px 4px var(--color-quinary);
 }

@@ -24,9 +24,9 @@ select {
   border-radius: .3rem;
   box-shadow: none;
   box-sizing: inherit; // Forced to replace inherit values of the normalize.css
-  height: 3.8rem;
-  padding: .6rem 1.0rem .7rem; // This vertically centers text on FF, ignored by Webkit
+  padding: .6rem .8rem .7rem; // This vertically centers text on FF, ignored by Webkit
   width: 100%;
+  line-height: 1.5rem;
 
   &:focus {
     border-color: var(--color-primary);
@@ -35,11 +35,11 @@ select {
 }
 
 select {
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 8" width="30"><path fill="" d="M0,0l6,8l6-8"/></svg>') center right no-repeat;
-  padding-right: 3.0rem;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 8" width="25"><path fill="gray" d="M0,0l6,8l6-8"/></svg>') center right no-repeat;
+  padding-right: 1rem;
 
   &:focus {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 8" width="30"><path fill="" d="M0,0l6,8l6-8"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 8" width="25"><path fill="" d="M0,0l6,8l6-8"/></svg>');
   }
 
   &[multiple] {
@@ -55,8 +55,8 @@ textarea {
 label,
 legend {
   display: block;
-  font-size: 1.6rem;
-  font-weight: 700;
+  font-size: 1.2rem;
+  font-weight: 200;
   margin-bottom: .5rem;
 }
 
@@ -76,10 +76,6 @@ input[type='radio'] {
   margin-left: .5rem;
 }
 
-
-// Custom styles
-// -----------------------------------
-
 .phx-no-feedback.invalid-feedback, .phx-no-feedback.valid-feedback {
   display: none;
 }
@@ -88,4 +84,8 @@ input[type='radio'] {
   border-color: var(--main-color) !important;
   padding-right: 0 !important;
   background-image: none !important;
+}
+
+.invalid-feedback {
+  color: var(--color-error-label);
 }
