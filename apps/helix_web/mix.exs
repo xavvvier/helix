@@ -50,7 +50,7 @@ defmodule HXWeb.MixProject do
       {:helix, in_umbrella: true},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.4.1"},
-      {:helix, in_umbrella: true}
+      {:esbuild, "~> 0.2", runtime: Mix.env() == :dev}
     ]
   end
 
@@ -59,6 +59,7 @@ defmodule HXWeb.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
+      "assets.deploy": ["esbuild default --minify", "phx.digest"],
       setup: ["deps.get", "cmd npm install --prefix assets"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
     ]

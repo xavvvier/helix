@@ -19,6 +19,15 @@ config :helix_web,
   ecto_repos: [HX.Repo],
   generators: [context_app: :helix]
 
+# Configure esbuild (the version is required)
+config :esbuild,
+  version: "0.12.18",
+  default: [
+    args: ~w(js/app.js --bundle --target=es2016 --outdir=../priv/static/assets),
+    cd: Path.expand("../apps/helix_web/assets", __DIR__),
+    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+  ]
+
 # Configures the endpoint
 config :helix_web, HXWeb.Endpoint,
   url: [host: "localhost"],
