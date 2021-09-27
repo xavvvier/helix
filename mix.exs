@@ -24,7 +24,11 @@ defmodule Helix.MixProject do
     [
       # Running `mix phx.digest` at the umbrella root generates an warning line on non-web apps, i.e. :helix
       # this is because those projects do not have a priv/static folder
-      "assets.deploy": ["esbuild default --minify", "phx.digest"],
+      "assets.deploy": [
+        "esbuild default --minify",
+        "system_sass default --style=compressed",
+        "phx.digest"
+      ],
     ]
   end
 end

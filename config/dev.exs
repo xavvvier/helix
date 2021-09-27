@@ -22,7 +22,8 @@ config :helix_web, HXWeb.Endpoint,
   check_origin: false,
   watchers: [
     # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
+    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
+    system_sass: {SystemSass, :run, [:default, ~w(--watch)]},
   ]
 
 # ## SSL Support

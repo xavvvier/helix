@@ -25,7 +25,14 @@ config :esbuild,
   default: [
     args: ~w(js/app.js --bundle --target=es2016 --outdir=../priv/static/assets),
     cd: Path.expand("../apps/helix_web/assets", __DIR__),
+    # NODE_PATH: find modules inside ../deps folder. Modules like phoenix, phoenix_html, phoenix_live_view are located there
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+  ]
+
+config :system_sass,
+  default: [
+    args: ~w(css/app.scss ../priv/static/assets/app.css),
+    cd: Path.expand("../apps/helix_web/assets", __DIR__)
   ]
 
 # Configures the endpoint
