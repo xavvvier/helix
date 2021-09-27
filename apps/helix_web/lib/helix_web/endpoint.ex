@@ -23,7 +23,7 @@ defmodule HXWeb.Endpoint do
   plug Plug.Static,
     at: "/",
     from: :helix_web,
-    gzip: false,
+    gzip: true,
     only: ~w(assets css fonts images js favicon.ico robots.txt)
 
   # Code reloading can be explicitly enabled under the
