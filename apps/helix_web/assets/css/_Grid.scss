@@ -1,4 +1,4 @@
-
+@import '_Variables';
 // Grid
 // ––––––––––––––––––––––––––––––––––––––––––––––––––
 
@@ -53,6 +53,7 @@
     margin-left: 0;
     max-width: 100%;
     width: 100%;
+    margin-bottom: 1rem;
 
     // Column Offsets
     &.col-offset-10 {
@@ -178,17 +179,13 @@
 }
 
 // Larger than mobile screen
-@media (min-width: 600px) {// Safari desktop has a bug using `rem`, but Safari mobile works
 
+@media (min-width: map-get($grid-breakpoints, 'sm')) {// Safari desktop has a bug using `rem`, but Safari mobile works
   .row {
     flex-direction: row;
-    // width: calc(100% + 2.0rem);
     width: 100%;
-
-    // .col {
-    //   margin-bottom: inherit;
-    //   padding: 0 1.0rem;
-    // }
+    .col {
+      margin-bottom: 0;
+    }
   }
-
 }

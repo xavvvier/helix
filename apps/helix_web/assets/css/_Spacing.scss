@@ -1,59 +1,68 @@
-
 // Spacing
 // ––––––––––––––––––––––––––––––––––––––––––––––––––
+// https://www.sassmeister.com/gist/34c0eeebd7673c9ed09f0fe850522bb4?token=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&scope=gist,read:user
 
-.button,
-button,
-dd,
-dt,
-li {
-  margin-bottom: 1.0rem;
+@import '_Variables';
+
+.mx-auto {
+  margin-right: auto;
+  margin-left: auto;
+}
+@mixin generator($prefix, $properties, $sizes) {
+  @each $suffix, $size in $sizes {
+    // Create the rule
+    .#{$prefix}-#{$suffix} {
+        @each $property in $properties {
+            #{$property}: $size;
+        }
+    }
+  }
 }
 
-fieldset,
-input,
-select,
-textarea {
-  margin-bottom: .5rem
-}
+$sizes: (
+  1: 0.25rem,
+//  2: 0.5rem,
+  3: 1rem,
+  // 4: 2rem,
+  5: 3rem,
+);
 
-blockquote,
-dl,
-figure,
-form,
-ol,
-p,
-pre,
-table,
-ul {
-  margin-bottom: 2.5rem;
-}
 
-// Margin
-// t -> top
-// b -> bottom
-// r -> right
-// l -> left
-// y -> vertical: top & bottom
-// x -> horizontal: left & right
-// 0 -> 0
-// 1p -> 1px
-// 2p -> 2px
-// 4p -> 4px
-// 1 -> 1rem
-// 1.5 -> 1.5rem
-// 2 -> 2rem
+// Margin classes are prefixed with 'm'
+// mt -> top
+// mb -> bottom
+// mr -> right
+// ml -> left
+// my -> vertical: top & bottom
+// mx -> horizontal: left & right
+// Padding classes are prefixed with 'p'
+@include generator(m, [margin], $sizes);
+// @include generator(ml, [margin-left], $sizes);
+// @include generator(mr, [margin-right], $sizes);
+@include generator(mt, [margin-top], $sizes);
+@include generator(mb, [margin-bottom], $sizes);
+@include generator(my, [margin-top, margin-bottom], $sizes);
+@include generator(mx, [margin-left, margin-right], $sizes);
 
-.my1 {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
+@include generator(p, [padding], $sizes);
+// @include generator(pl, [padding-left], $sizes);
+// @include generator(pr, [padding-right], $sizes);
+@include generator(pt, [padding-top], $sizes);
+@include generator(pb, [padding-bottom], $sizes);
+@include generator(py, [padding-top, padding-bottom], $sizes);
+@include generator(px, [padding-left, padding-right], $sizes);
 
-.px2 {
-  padding-left: 2rem;
-  padding-right: 2rem;
-}
-.card {
-  background-color: var(--color-card-background);
-  box-shadow: 4px 4px 4px var(--color-quinary);
+$breakpoint-sizes: (
+  // 1: 0.25rem,
+  // 2: 0.5rem,
+  3: 1rem,
+  // 4: 2rem,
+  5: 3rem,
+);
+@each $infix, $break-point in $grid-breakpoints {
+  @media (min-width: $break-point) {
+    @include generator('mt-#{$infix}', [margin-top], $breakpoint-sizes);
+    @include generator('mb-#{$infix}', [margin-bottom], $breakpoint-sizes);
+    @include generator('my-#{$infix}', [margin-top, margin-bottom], $breakpoint-sizes);
+  }
 }

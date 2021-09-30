@@ -16,6 +16,17 @@
 @import '_Image';
 @import '_Utility';
 
+// Components
+// --------------------------------------------------
+.card {
+  background-color: var(--color-card-background);
+  box-shadow: 4px 4px 4px var(--color-quinary);
+  padding: 2rem;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 1rem;
+}
+
 /* Alerts and form errors */
 .alert {
   padding: 15px;
