@@ -1,39 +1,43 @@
 <div role="presentation" class="container card">
 	<h3>Class creation</h3>
 		<.form let={f} for={@changeset} phx_change="validate" phx_submit="create">
-		<div class="my-1">
+		<div class="sm-10">
 				<%= label f, :name %>
 				<%= text_input f, :name, phx_debounce: "blur" %>
 				<%= error_tag f, :name %>
 		</div>
 		<h4>Properties</h4>
 		<%= for property_form <- inputs_for(f, :properties) do %>
-			<div class="row mb-5 mb-sm-3">
-				<div class="col col-25">
+			<div class="grid grid-full grid-sm-none gutters mb-5 mb-sm-3">
+				<div class="cell sm-10">
 					<%= label property_form, :name %>
 					<%= text_input property_form, :name, phx_debounce: "blur" %>
 					<%= error_tag property_form, :name %>
 				</div>
-				<div class="col col-25">
+				<div class="cell sm-8">
 					<%= label property_form, :type %>
 					<%= select property_form, :type, @property_types %>
 				</div>
-				<div class={"col col-25 #{visible_when(property_form.source.changes.type, :text)}"} id="text_length_field">
+				<div class={"cell sm-4 u-1of2 u-sm-none #{visible_when(property_form.source.changes.type, :text)}"}>
 					<%= label property_form, :length %>
 					<%= text_input property_form, :length, placeholder: "Length", phx_debounce: "blur" %>
 					<%= error_tag property_form, :length %>
 				</div>
-				<div class={"col col-25 #{visible_when(property_form.source.changes.type, :decimal)}"} id="decimal_scale_field">
-					<%= label property_form, :scale %>
-					<%= text_input property_form, :scale, placeholder: "Scale", phx_debounce: "blur" %>
-					<%= error_tag property_form, :scale %>
+				<div class={"cell sm-8 #{visible_when(property_form.source.changes.type, :decimal)}"}>
+					<div class="grid grid-fit">
+						<div class="cell mr-3">
+							<%= label property_form, :scale %>
+							<%= text_input property_form, :scale, placeholder: "Scale", phx_debounce: "blur" %>
+							<%= error_tag property_form, :scale %>
+						</div>
+						<div class="cell">
+								<%= label property_form, :precision %>
+								<%= text_input property_form, :precision, placeholder: "Precision", phx_debounce: "blur" %>
+								<%= error_tag property_form, :precision %>
+						</div>
+					</div>
 				</div>
-				<div class={"col col-25 #{visible_when(property_form.source.changes.type, :decimal)}"} id="decimal_scale_field">
-					<%= label property_form, :precision %>
-					<%= text_input property_form, :precision, placeholder: "Precision", phx_debounce: "blur" %>
-					<%= error_tag property_form, :precision %>
-				</div>
-				<div class={"col col-25 #{visible_when(property_form.source.changes.type, [:single_link, :multiple_link])}"} id="decimal_scale_field">
+				<div class={"cell sm-8 #{visible_when(property_form.source.changes.type, [:single_link, :multiple_link])}"}>
 					<%= label property_form, :linked_class %>
 					<%= select property_form, :linked_class_id, [
 						[key: "Select one" , value: "" ] |

@@ -37,7 +37,7 @@ $sizes: (
 // Padding classes are prefixed with 'p'
 @include generator(m, [margin], $sizes);
 // @include generator(ml, [margin-left], $sizes);
-// @include generator(mr, [margin-right], $sizes);
+@include generator(mr, [margin-right], $sizes);
 @include generator(mt, [margin-top], $sizes);
 @include generator(mb, [margin-bottom], $sizes);
 @include generator(my, [margin-top, margin-bottom], $sizes);
@@ -63,5 +63,15 @@ $breakpoint-sizes: (
     @include generator('mt-#{$infix}', [margin-top], $breakpoint-sizes);
     @include generator('mb-#{$infix}', [margin-bottom], $breakpoint-sizes);
     @include generator('my-#{$infix}', [margin-top, margin-bottom], $breakpoint-sizes);
+  }
+}
+
+@media (min-width: map-get($grid-breakpoints, 'sm')) {
+  $widths: [4,8,10];
+
+  @each $width in $widths {
+    .sm-#{$width}{
+      width: $width * 2rem;
+    }
   }
 }
