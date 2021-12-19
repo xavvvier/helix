@@ -8,6 +8,9 @@ module.exports = {
         screen: '#f8f1eb',
         input: '#d1d1d1',
       },
+      flex: {
+        full: '0 0 100%',
+      },
     },
   },
   plugins: [],
