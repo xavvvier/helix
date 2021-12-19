@@ -3,33 +3,47 @@
 		<.form let={f} for={@changeset} phx_change="validate" phx_submit="create">
 		<div class="sm:w-52">
 				<%= label f, :name %>
-				<%= text_input f, :name, phx_debounce: "blur", class: "w-full" %>
+				<%= text_input f, :name, phx_debounce: "blur" %>
 				<%= error_tag f, :name %>
 		</div>
 		<h4>Properties</h4>
 		<%= for property_form <- inputs_for(f, :properties) do %>
-			<div class="flex-full sm:flex mb-8 sm:mb-2.5">
-				<div class="flex-1 sm:flex-none sm:w-48">
+			<div class="sm:flex mb-8 sm:mb-2.5">
+				<div class="sm:w-48 sm:mr-3">
 					<%= label property_form, :name %>
-					<%= text_input property_form, :name, phx_debounce: "blur", class: "w-full" %>
+					<%= text_input property_form, :name, phx_debounce: "blur" %>
 					<%= error_tag property_form, :name %>
 				</div>
-				<div class="flex-1 sm:flex-none sm:w-36">
+				<div class="sm:w-36 sm:mr-3">
 					<%= label property_form, :type %>
-					<%= select property_form, :type, @property_types, class: "w-full" %>
+					<%= select property_form, :type, @property_types %>
 				</div>
-				<div class={"flex-1 sm:flex-none sm:w-16 w-1/2 #{visible_when(property_form.source.changes.type, :text)}"}>
+				<div class={"sm:w-16 w-1/2 #{visible_when(property_form.source.changes.type, :text)}"}>
 					<%= label property_form, :length %>
-					<%= text_input property_form, :length, placeholder: "Length", phx_debounce: "blur", class: "w-full" %>
+					<%= text_input property_form, :length, placeholder: "Length", phx_debounce: "blur" %>
 					<%= error_tag property_form, :length %>
 				</div>
-				<div class={"flex-1 sm:flex-none sm:w-36 #{visible_when(property_form.source.changes.type, [:single_link, :multiple_link])}"}>
+				<div class={"sm:w-36 #{visible_when(property_form.source.changes.type, [:single_link, :multiple_link])}"}>
 					<%= label property_form, :linked_class %>
 					<%= select property_form, :linked_class_id, [
 						[key: "Select one" , value: "" ] |
 						@existing_classes
-					], class: "w-full" %>
+					] %>
 					<%= error_tag property_form, :linked_class_id %>
+				</div>
+				<div class={"sm:w-36 md:48 #{visible_when(property_form.source.changes.type, :decimal)}"}>
+					<div class="flex">
+						<div class="flex-1 mr-3">
+							<%= label property_form, :scale %>
+							<%= text_input property_form, :scale, placeholder: "Scale", phx_debounce: "blur" %>
+							<%= error_tag property_form, :scale %>
+						</div>
+						<div class="flex-1">
+								<%= label property_form, :precision %>
+								<%= text_input property_form, :precision, placeholder: "Precision", phx_debounce: "blur" %>
+								<%= error_tag property_form, :precision %>
+						</div>
+					</div>
 				</div>
 			</div>
 		<% end %>

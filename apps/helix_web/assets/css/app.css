@@ -44,7 +44,7 @@
 	input:not([type]),
 	textarea,
 	select {
-		@apply text-xs px-1.5 py-2 leading-4 rounded-[3px] shadow-none border border-input pr-8;
+		@apply text-xs px-1.5 py-2 leading-4 rounded-[3px] shadow-none border border-input pr-8 w-full;
 		@apply focus:shadow-md focus:outline-0 focus:border-primary;
 		-webkit-appearance: none;
 	}
@@ -106,7 +106,7 @@
 	}
 
 	.invalid-feedback {
-		@apply text-red-700 text-xs;
+		@apply text-red-700 text-xs block;
 	}
 
 }
