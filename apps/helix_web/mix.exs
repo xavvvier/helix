@@ -49,8 +49,7 @@ defmodule HXWeb.MixProject do
       {:helix, in_umbrella: true},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.4.1"},
-      {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
-      {:system_sass, in_umbrella: true, runtime: Mix.env() == :dev}
+      {:esbuild, "~> 0.2", runtime: Mix.env() == :dev}
     ]
   end
 

@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+	body {
+		@apply font-sans font-light bg-screen text-secondary;
+	}
+
+	h1 {
+		@apply text-5xl my-6 font-normal;
+	}
+	h2 {
+		@apply text-3xl my-5 font-light;
+	}
+	h3 {
+		@apply text-2xl my-5 font-light;
+	}
+	h4 {
+		@apply text-xl my-4 font-light;
+	}
+	h5 {
+		@apply text-lg my-4;
+	}
+
+	label {
+		@apply text-xs font-extralight;
+	}
+
+	input[type='color'],
+	input[type='date'],
+	input[type='datetime'],
+	input[type='datetime-local'],
+	input[type='email'],
+	input[type='month'],
+	input[type='number'],
+	input[type='password'],
+	input[type='search'],
+	input[type='tel'],
+	input[type='text'],
+	input[type='url'],
+	input[type='week'],
+	input:not([type]),
+	textarea,
+	select {
+		@apply text-xs px-1.5 py-2 leading-4 rounded-[3px] shadow-none border border-input pr-8;
+		@apply focus:shadow-md focus:outline-0 focus:border-primary;
+		-webkit-appearance: none;
+		/* width: 100%; */
+	}
+
+	select {
+		background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 8" width="25"><path fill="gray" d="M0,0l6,8l6-8"/></svg>') center right no-repeat;
+	}
+	select:focus {
+		background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 8" width="25"><path fill="" d="M0,0l6,8l6-8"/></svg>');
+	}
+	select[multiple] {
+		background: none;
+		height: auto;
+	}
+
+	a {
+		@apply text-primary underline text-sm;
+		@apply hover:opacity-90;
+	}
+
+	.btn,
+	button,
+	input[type='button'],
+	input[type='reset'],
+	input[type='submit'] {
+		@apply text-slate-50 text-xs leading-7 border rounded px-4 tracking-wider;
+		@apply bg-primary !important;
+		@apply focus:opacity-80;
+		@apply hover:opacity-80;
+		@apply disabled:opacity-50 disabled:cursor-not-allowed;
+		cursor: pointer;
+		line-height: 30px;
+		white-space: nowrap;
+	}
+
+	.btn-outline {
+		@apply text-primary border border-primary;
+		@apply bg-transparent !important;
+		@apply hover:bg-gray-100 !important;
+		@apply disabled:bg-transparent disabled:text-slate-700 disabled:border-slate-300 !important;
+	}
+
+}
+
+
+@layer components {
+
+	.card {
+		@apply bg-white shadow-lg p-5 mx-auto mt-2.5;
+	}
+
+	.phx-no-feedback.invalid-feedback, .phx-no-feedback.valid-feedback {
+		display: none;
+	}
+
+	.phx-no-feedback input {
+		padding-right: 0 !important;
+		background-image: none !important;
+	}
+
+	.invalid-feedback {
+		@apply text-red-700 text-xs;
+	}
+
+}
