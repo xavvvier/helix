@@ -29,6 +29,17 @@ config :esbuild,
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
   ]
 
+# Config tailwind
+config :tailwind,
+  version: "3.0.18",
+  default: [
+    args: ~w(
+      --config=tailwind.config.js
+      --input=css/app.css
+      --output=../priv/static/assets/app.css
+    ),
+    cd: Path.expand("../apps/helix_web/assets", __DIR__),
+  ]
 # Configures the endpoint
 config :helix_web, HXWeb.Endpoint,
   url: [host: "localhost"],
