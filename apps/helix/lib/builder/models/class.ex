@@ -24,6 +24,7 @@ defmodule HX.Builder.Class do
     |> cast_assoc(:properties)
   end
 
+  @spec change_class(map()) :: map()
   def change_class(params) do
     %Class{}
     |> changeset(params)

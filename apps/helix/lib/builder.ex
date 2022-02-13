@@ -9,7 +9,7 @@ defmodule HX.Builder do
   Context module grouping functionality related to `Class` and `Property` in the system
   """
 
-  # TODO: add specs
+  @spec validate_class(map()) :: {:ok, map()} | {:error, map()}
   def validate_class(attrs \\ %{}) do
     Class.change_class(attrs)
     |> apply_action(:insert)
