@@ -55,6 +55,9 @@ defmodule HXWeb.ClassLive do
        |> put_flash(:info, "class created with id #{result.new_class.id}")
        |> redirect(to: Routes.class_path(HXWeb.Endpoint, :index))}
     else
+      {:error, {_reason, changeset}} ->
+        socket = assign(socket, changeset: changeset)
+        {:noreply, socket}
       {:error, changeset} ->
         socket = assign(socket, changeset: changeset)
         {:noreply, socket}

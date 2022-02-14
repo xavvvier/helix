@@ -15,7 +15,7 @@ defmodule HXWeb.FallbackController do
     |> render(:"403")
   end
 
-  def call(conn, {:error, _error_type, %Ecto.Changeset{} = changeset}) do
+  def call(conn, {:error, {_error_type, %Ecto.Changeset{} = changeset}}) do
     call(conn, {:error, changeset})
   end
 

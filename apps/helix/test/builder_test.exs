@@ -25,7 +25,7 @@ defmodule HX.Test.BuilderTest do
       ]
     }
 
-    {:error, :ddl_execution, %{message: message}, _} = Builder.create_class(class)
+    {:error, {:ddl_execution, %{message: message}}} = Builder.create_class(class)
     assert message =~ "bad field name"
   end
 
@@ -63,7 +63,7 @@ defmodule HX.Test.BuilderTest do
       ]
     }
 
-    {:error, :duplicated_property, _error} = Builder.create_class(class)
+    {:error, {:duplicated_property, _error}} = Builder.create_class(class)
   end
 
   test "create a class with id property fails" do
@@ -76,7 +76,7 @@ defmodule HX.Test.BuilderTest do
       ]
     }
 
-    {:error, :duplicated_property, _error} = Builder.create_class(class)
+    {:error, {:duplicated_property, _error}} = Builder.create_class(class)
   end
 
   test "create classes with different is_system passes" do
@@ -86,12 +86,12 @@ defmodule HX.Test.BuilderTest do
 
   test "check class name accept single quote" do
     {:ok, _result} = Builder.create_class(%Class{name: "a'b", properties: []})
-    {:error, :class_already_exists, _} = Builder.create_class(%Class{name: "a'b", properties: []})
+    {:error, {:class_already_exists, _}} = Builder.create_class(%Class{name: "a'b", properties: []})
   end
 
   test "create a class with existing name fails" do
     {:ok, _result} = Builder.create_class(%Class{name: "ab", properties: []})
-    {:error, :class_already_exists, _} = Builder.create_class(%Class{name: "ab", properties: []})
+    {:error, {:class_already_exists, _}} = Builder.create_class(%Class{name: "ab", properties: []})
   end
 
   test "create class with is_system uses sys db prefix" do

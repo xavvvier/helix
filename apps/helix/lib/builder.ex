@@ -19,7 +19,7 @@ defmodule HX.Builder do
   Creates a new `Class` and its related database table and columns
   Every `Class` creates an id `Property` by default.
   """
-  @spec create_class(Class.t()) :: {:ok, map()} | {:error, atom(), tuple()}
+  @spec create_class(Class.t()) :: {:ok, map()} | {:error, {atom(), map()}}
   def create_class(%Class{} = class) do
     class = %{class | properties: resolve_linked_properties(class.properties)}
 
@@ -85,15 +85,19 @@ defmodule HX.Builder do
   end
 
   defp format_error({:error, :ddl_execution, %{postgres: %{code: :duplicate_column}} = error, _}) do
-    {:error, :duplicated_property, error}
+    {:error, {:duplicated_property, error}}
   end
 
   defp format_error({:error, %{postgres: %{code: :duplicate_column}} = error}) do
-    {:error, :duplicated_property, error}
+    {:error, {:duplicated_property, error}}
   end
 
   defp format_error({:error, :new_class, error, _}) do
-    {:error, :class_already_exists, error}
+    {:error, {:class_already_exists, error}}
+  end
+
+  defp format_error({:error, :ddl_execution, failed_value, _changes_so_far}) do
+    {:error, {:ddl_execution, failed_value}}
   end
 
   defp format_error(x), do: x
