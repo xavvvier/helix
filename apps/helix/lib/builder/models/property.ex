@@ -27,11 +27,14 @@ defmodule HX.Builder.Property do
     property
     |> cast(params, [:class_id, :id, :name, :type, :length, :precision, :scale, :linked_class_id])
     |> cast_type()
+    |> validate_restricted_name
     |> validate_length(:name, min: 1, max: 250)
     |> validate_required([:name])
+    |> unique_constraint(:name, name: :property_name_unique_index)
     |> validate_links
     |> validate_text
     |> validate_decimal
+    |> IO.inspect(label: "validated prop")
   end
 
   def change_property(params) do
@@ -49,6 +52,17 @@ defmodule HX.Builder.Property do
       false ->
         type_as_atom = PropertyType.parse_type(type)
         put_change(changeset, :type, type_as_atom)
+    end
+  end
+
+  defp validate_restricted_name(changeset) do
+    IO.inspect(changeset, label: "validatign restricted nane")
+    name = get_field(changeset, :name)
+    case changeset.valid? and name == "id" do
+      true ->
+        add_error(changeset, :name, "Invalid property name")
+      _ ->
+        changeset
     end
   end
 

@@ -20,7 +20,8 @@ defmodule HX.Builder.Class do
     |> cast(params, [:id, :name, :is_system])
     |> validate_required([:name])
     |> validate_length(:name, min: 1, max: 250)
-    |> unique_constraint(:unique_name, name: :table_name_is_system_index)
+    # :table_name_is_system_index is a multi-column unique index, see migration file
+    |> unique_constraint(:name, name: :table_name_is_system_index)
     |> cast_assoc(:properties)
   end
 

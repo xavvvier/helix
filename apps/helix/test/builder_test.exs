@@ -55,18 +55,40 @@ defmodule HX.Test.BuilderTest do
            ]
   end
 
+  test "class changeset validate internal props" do
+    params = %{
+      name: "Class2",
+      properties: [
+        %{name: "Name", type: :number},
+        %{name: "Name", type: :number}
+      ]
+    }
+    changeset = Class.changeset(%Class{}, params)
+    refute changeset.valid?
+  end
+
   test "creating property name with id property fails" do
     class = %Class{
       name: "Class2",
       properties: [
-        %Property{name: "id", type: :number}
+        %Property{name: "Name", type: :number},
+        %Property{name: "Name", type: :number}
       ]
     }
 
-    {:error, {:duplicated_property, _error}} = Builder.create_class(class)
+    {:error, {:duplicated_property, reason}} = Builder.create_class(class)
+    # reason should be a changeset
+    reason
+    |> IO.inspect(label: "reason")
   end
 
   test "create a class with id property fails" do
+    changeset = Property.changeset(%Property{}, %{
+      name: "id", type: :number
+    })
+
+    refute changeset.valid?
+
     class = %Class{
       name: "Class4",
       properties: [
@@ -76,7 +98,7 @@ defmodule HX.Test.BuilderTest do
       ]
     }
 
-    {:error, {:duplicated_property, _error}} = Builder.create_class(class)
+    {:error, {:duplicated_property, error}} = Builder.create_class(class)
   end
 
   test "create classes with different is_system passes" do

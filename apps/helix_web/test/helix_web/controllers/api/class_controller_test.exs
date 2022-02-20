@@ -110,7 +110,7 @@ defmodule HXWeb.Api.ClassControllerTest do
         })
 
       error = json_response(conn, 500)
-      assert error == %{"unique_name" => ["has already been taken"]}
+      assert error == %{"name" => ["has already been taken"]}
     end
   end
 end
